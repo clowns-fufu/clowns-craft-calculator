@@ -2,15 +2,15 @@
 <html lang="pt">
 <head>
   <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-35ITC07Y9T"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-35ITC07Y9T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-35ITC07Y9T');
+  </script>
+  <!-- End Google Analytics -->
 
-  gtag('config', 'G-351TC07V9T');
-</script>
-<!-- End Google Analytics -->
   <meta charset="UTF-8" />
   <title>Clowns – Craft Calculadora</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,22 +29,19 @@
       --green-input: #022c22;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
       color: var(--text);
-      padding: 24px;
+      padding: 20px;
       min-height: 100vh;
     }
 
     .app {
-      max-width: 1100px;
+      max-width: 1265px;
       margin: 0 auto;
       background: linear-gradient(145deg, #020617 0, #020617 40%, #020617 100%);
       border-radius: 24px;
@@ -70,9 +67,7 @@
       text-transform: uppercase;
     }
 
-    .title-block h1 span {
-      color: var(--accent);
-    }
+    .title-block h1 span { color: var(--accent); }
 
     .title-block p {
       margin: 4px 0 0;
@@ -99,9 +94,7 @@
     }
 
     @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .grid { grid-template-columns: minmax(0, 1fr); }
     }
 
     .card {
@@ -119,9 +112,7 @@
       color: var(--text-soft);
     }
 
-    .card h2 span {
-      color: var(--accent);
-    }
+    .card h2 span { color: var(--accent); }
 
     .card p {
       margin: 0 0 12px;
@@ -143,15 +134,13 @@
     }
 
     .table th {
-      font-size: 11px;
+      font-size: 12px;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       color: var(--text-soft);
     }
 
-    .table tr:last-child td {
-      border-bottom: none;
-    }
+    .table tr:last-child td { border-bottom: none; }
 
     .table tfoot td {
       border-top: 1px solid rgba(55,65,81,0.9);
@@ -187,42 +176,25 @@
       font-size: 12px;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(55,65,81,0.9);
-      font-size: 11px;
-      color: var(--text-soft);
-    }
+    .small { font-size: 11px; color: var(--text-soft); }
 
-    .small {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
+    .result-number { font-variant-numeric: tabular-nums; }
 
-    .result-number {
-      font-variant-numeric: tabular-nums;
-    }
+    .result-number.negative { color: var(--danger); }
 
-    .result-number.negative {
-      color: var(--danger);
-    }
-
-    .result-number.positive {
-      color: var(--success);
-    }
+    .result-number.positive { color: var(--success); }
 
     .section-label {
-      font-size: 11px;
+      font-size: 13px;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-soft);
-      margin: 10px 0 4px;
-    }
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      margin: 18px 0 8px;
+      padding-top: 6px;
+      border-top: 2px solid rgba(148,163,184,0.45);
+}
+
 
     .footer-note {
       margin-top: 18px;
@@ -254,36 +226,54 @@
       <!-- LADO ESQUERDO: armas -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
-        <p>Escreve quantas <strong>Scar, Revolver, Musket, QBZ</strong> vais craftar ou vender.</p>
+        <p>Escreve quantas <strong>Scar, Revolver, Musket, QBZ</strong> vais craftar ou vender e, se quiseres, o preço por arma.</p>
+
         <table class="table">
           <thead>
             <tr>
-              <th>Arma</th>
+              <th>Armas</th>
               <th>Quantidade</th>
+              <th>Preço €/u</th>
+              <th>Total €</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Scar</td>
               <td><input class="input green" type="number" min="0" value="0" id="q-Scar" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar" /></td>
+              <td><span class="result-number" data-weapon-total="Scar">0</span></td>
             </tr>
             <tr>
               <td>Revolver</td>
               <td><input class="input green" type="number" min="0" value="0" id="q-Revolver" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Revolver" /></td>
+              <td><span class="result-number" data-weapon-total="Revolver">0</span></td>
             </tr>
             <tr>
               <td>Musket</td>
               <td><input class="input green" type="number" min="0" value="0" id="q-Musket" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Musket" /></td>
+              <td><span class="result-number" data-weapon-total="Musket">0</span></td>
             </tr>
             <tr>
               <td>QBZ</td>
               <td><input class="input green" type="number" min="0" value="0" id="q-QBZ" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-QBZ" /></td>
+              <td><span class="result-number" data-weapon-total="QBZ">0</span></td>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Total armas (€)</td>
+              <td><span class="result-number" id="weapons-total">0</span></td>
+            </tr>
+          </tfoot>
         </table>
-<br>
-<br>
-        <p class="section-label">Peças de arma necessárias</p>
+
+        <br><br>
+
+        <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
         <table class="table">
           <thead>
             <tr>
@@ -291,19 +281,31 @@
               <th>Total</th>
             </tr>
           </thead>
-          <tbody id="parts-body">
-            <!-- preenchido por JS -->
-          </tbody>
+          <tbody id="parts-body"></tbody>
+        </table>
+
+        <br>
+
+        <p class="section-label">Peças extra para craftar</p>
+        <p class="small">Aqui podes meter peças que vais craftar separadas das armas (ex: só engrenagens).</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Peça</th>
+              <th>Quantidade extra</th>
+            </tr>
+          </thead>
+          <tbody id="manual-parts-body"></tbody>
         </table>
       </section>
 
       <!-- LADO DIREITO: materiais / mina -->
       <section class="card">
         <h2><span>2.</span> Materiais da mina</h2>
-        <p>
-          Só podes escrever nas caixas a <strong>verde</strong>.
-        </p>
-<br>
+        <p>Só podes escrever nas caixas a <strong>verde</strong>.</p>
+
+        <br>
+
         <p class="section-label">Pepitas necessárias</p>
         <table class="table">
           <thead>
@@ -314,12 +316,11 @@
               <th>Falta / sobra</th>
             </tr>
           </thead>
-          <tbody id="pepitas-body">
-            <!-- JS -->
-          </tbody>
+          <tbody id="pepitas-body"></tbody>
         </table>
-<br>
-<br>
+
+        <br><br>
+
         <p class="section-label">Refinado necessárias (barras)</p>
         <table class="table">
           <thead>
@@ -330,9 +331,7 @@
               <th>Falta / sobra</th>
             </tr>
           </thead>
-          <tbody id="refined-body">
-            <!-- JS -->
-          </tbody>
+          <tbody id="refined-body"></tbody>
         </table>
       </section>
     </div>
@@ -347,13 +346,9 @@
   </div>
 
   <script>
-    // --- dados base, copiados da tua folha Excel ---
-
     const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha"];
     const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
 
-    // quantas pepitas de cada material são precisas por cada peça
-    // (Info!B4:H9)
     const materialPerPart = {
       Ferro:      { Carvao: 8,  Ferro: 20, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0 },
       Gatilho:    { Carvao: 8,  Ferro: 0,  Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0 },
@@ -363,28 +358,23 @@
       Corp:       { Carvao: 8,  Ferro: 40, Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 }
     };
 
-    // quantas peças de cada tipo precisa cada arma (Info!B15:G18)
     const weaponParts = {
       Scar:      { Ferro: 1, Gatilho: 1, Mola: 1, Engrenagem: 1, Cano: 1, Corp: 1 },
       Revolver:  { Ferro: 1, Gatilho: 1, Mola: 1, Engrenagem: 1, Cano: 1, Corp: 1 },
       Musket:    { Ferro: 1, Gatilho: 1, Mola: 1, Engrenagem: 1, Cano: 1, Corp: 1 },
-      QBZ:       { Ferro: 1, Gatilho: 1, Mola: 1, Engrenagem: 0, Cano: 1, Corp: 1 } // Engrenagem = 0 no Excel
+      QBZ:       { Ferro: 1, Gatilho: 1, Mola: 1, Engrenagem: 0, Cano: 1, Corp: 1 }
     };
 
-    // Carvao e Borracha: 1:1. Restantes: 10 pepitas = 1 barra (igual ao teu Excel).
     function pepitasToBars(material, pepitas) {
-      if (material === "Carvao" || material === "Borracha") {
-        return pepitas;
-      }
+      if (material === "Carvao" || material === "Borracha") return pepitas;
       return pepitas / 10;
     }
 
-    // parse "50+68+10" -> 128
     function parseAmount(str) {
       if (!str) return 0;
-      const parts = str.split("+");
+      const pieces = str.split("+");
       let total = 0;
-      for (const p of parts) {
+      for (const p of pieces) {
         const n = parseFloat(p.trim().replace(",", "."));
         if (!isNaN(n)) total += n;
       }
@@ -397,13 +387,13 @@
       return n.toFixed(1);
     }
 
-    // construir linhas da tabela (pepitas / barras / peças)
     const partsBody = document.getElementById("parts-body");
+    const manualPartsBody = document.getElementById("manual-parts-body");
     const pepitasBody = document.getElementById("pepitas-body");
     const refinedBody = document.getElementById("refined-body");
 
     function buildStaticRows() {
-      // peças
+      // tabela das peças totais
       parts.forEach(part => {
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
@@ -415,24 +405,41 @@
         partsBody.appendChild(tr);
       });
 
+      // tabela das peças extra
+      parts.forEach(part => {
+        const tr = document.createElement("tr");
+        const tdName = document.createElement("td");
+        const tdInput = document.createElement("td");
+        tdName.textContent = part;
+        const input = document.createElement("input");
+        input.className = "input green";
+        input.type = "number";
+        input.min = "0";
+        input.value = "0";
+        input.id = "extra-" + part;
+        tdInput.appendChild(input);
+        tr.appendChild(tdName);
+        tr.appendChild(tdInput);
+        manualPartsBody.appendChild(tr);
+      });
+
       // pepitas
       materials.forEach(mat => {
         const tr = document.createElement("tr");
-
         const tdName = document.createElement("td");
-        tdName.textContent = mat;
-
         const tdNeed = document.createElement("td");
+        const tdHave = document.createElement("td");
+        const tdDiff = document.createElement("td");
+
+        tdName.textContent = mat;
         tdNeed.innerHTML = '<span class="result-number" data-pepitas-need="' + mat + '">0</span>';
 
-        const tdHave = document.createElement("td");
-        const input = document.createElement("input");
-        input.className = "input green";
-        input.placeholder = "ex: 50+68";
-        input.setAttribute("data-pepitas-have-input", mat);
-        tdHave.appendChild(input);
+        const inputPep = document.createElement("input");
+        inputPep.className = "input green";
+        inputPep.placeholder = "ex: 50+68";
+        inputPep.setAttribute("data-pepitas-have-input", mat);
+        tdHave.appendChild(inputPep);
 
-        const tdDiff = document.createElement("td");
         tdDiff.innerHTML = '<span class="result-number" data-pepitas-diff="' + mat + '">0</span>';
 
         tr.appendChild(tdName);
@@ -442,24 +449,23 @@
         pepitasBody.appendChild(tr);
       });
 
-      // refined / barras
+      // barras refinado
       materials.forEach(mat => {
         const tr = document.createElement("tr");
-
         const tdName = document.createElement("td");
-        tdName.textContent = mat;
-
         const tdNeed = document.createElement("td");
+        const tdHave = document.createElement("td");
+        const tdDiff = document.createElement("td");
+
+        tdName.textContent = mat;
         tdNeed.innerHTML = '<span class="result-number" data-bars-need="' + mat + '">0</span>';
 
-        const tdHave = document.createElement("td");
-        const input = document.createElement("input");
-        input.className = "input green";
-        input.placeholder = "ex: 3+7";
-        input.setAttribute("data-bars-have-input", mat);
-        tdHave.appendChild(input);
+        const inputBar = document.createElement("input");
+        inputBar.className = "input green";
+        inputBar.placeholder = "ex: 3+7";
+        inputBar.setAttribute("data-bars-have-input", mat);
+        tdHave.appendChild(inputBar);
 
-        const tdDiff = document.createElement("td");
         tdDiff.innerHTML = '<span class="result-number" data-bars-diff="' + mat + '">0</span>';
 
         tr.appendChild(tdName);
@@ -473,50 +479,70 @@
     buildStaticRows();
 
     function recalc() {
-      // ler quantidades de armas
+      // quantidades das armas
       const weaponCounts = {};
-      for (const name of Object.keys(weaponParts)) {
+      Object.keys(weaponParts).forEach(name => {
         const input = document.getElementById("q-" + name);
         weaponCounts[name] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
-      }
+      });
 
-      // total de peças
+      // preços das armas
+      let weaponsTotal = 0;
+      Object.keys(weaponParts).forEach(name => {
+        const priceInput = document.getElementById("price-" + name);
+        const price = priceInput ? parseFloat(priceInput.value.replace(",", ".") || "0") : 0;
+        const qty = weaponCounts[name] || 0;
+        const total = price * qty;
+        const span = document.querySelector('[data-weapon-total="' + name + '"]');
+        if (span) span.textContent = formatNumber(total);
+        weaponsTotal += total;
+      });
+      const weaponsTotalSpan = document.getElementById("weapons-total");
+      if (weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
+
+      // peças extra
+      const extraParts = {};
+      parts.forEach(p => {
+        const input = document.getElementById("extra-" + p);
+        extraParts[p] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
+      });
+
+      // total de peças = armas + extra
       const totalParts = {};
-      parts.forEach(p => totalParts[p] = 0);
+      parts.forEach(p => totalParts[p] = extraParts[p] || 0);
 
-      for (const [weapon, partsNeeded] of Object.entries(weaponParts)) {
+      Object.entries(weaponParts).forEach(([weapon, partsNeeded]) => {
         const q = weaponCounts[weapon] || 0;
-        for (const [partName, qtyPerWeapon] of Object.entries(partsNeeded)) {
+        Object.entries(partsNeeded).forEach(([partName, qtyPerWeapon]) => {
           totalParts[partName] += q * qtyPerWeapon;
-        }
-      }
+        });
+      });
 
-      // actualizar UI das peças
+      // actualizar tabela de peças
       document.querySelectorAll("[data-part]").forEach(span => {
         const partName = span.getAttribute("data-part");
         span.textContent = totalParts[partName] || 0;
       });
 
-      // total pepitas necessárias por material
+      // pepitas necessárias por material
       const pepitasNeed = {};
       materials.forEach(m => pepitasNeed[m] = 0);
 
-      for (const [partName, totalPartQty] of Object.entries(totalParts)) {
+      Object.entries(totalParts).forEach(([partName, totalPartQty]) => {
         const map = materialPerPart[partName];
-        if (!map) continue;
-        for (const mat of materials) {
+        if (!map) return;
+        materials.forEach(mat => {
           const perPiece = map[mat] || 0;
           pepitasNeed[mat] += totalPartQty * perPiece;
-        }
-      }
+        });
+      });
 
-      // actualizar pepitas necessárias
       document.querySelectorAll("[data-pepitas-need]").forEach(span => {
         const mat = span.getAttribute("data-pepitas-need");
         span.textContent = formatNumber(pepitasNeed[mat] || 0);
       });
 
-      // calcular barras necessárias
+      // barras necessárias
       const barsNeed = {};
       materials.forEach(mat => {
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
@@ -527,7 +553,7 @@
         span.textContent = formatNumber(barsNeed[mat] || 0);
       });
 
-      // ler o que o jogador já tem (pepitas / barras)
+      // o que já tens (pepitas / barras)
       const pepitasHave = {};
       const barsHave = {};
 
@@ -535,10 +561,10 @@
         const pepInput = document.querySelector('[data-pepitas-have-input="' + mat + '"]');
         const barInput = document.querySelector('[data-bars-have-input="' + mat + '"]');
         pepitasHave[mat] = parseAmount(pepInput ? pepInput.value : "");
-        barsHave[mat]   = parseAmount(barInput ? barInput.value : "");
+        barsHave[mat] = parseAmount(barInput ? barInput.value : "");
       });
 
-      // diferenças
+      // diferenças pepitas
       document.querySelectorAll("[data-pepitas-diff]").forEach(span => {
         const mat = span.getAttribute("data-pepitas-diff");
         const diff = pepitasHave[mat] - (pepitasNeed[mat] || 0);
@@ -548,6 +574,7 @@
         if (diff > 0) span.classList.add("positive");
       });
 
+      // diferenças barras
       document.querySelectorAll("[data-bars-diff]").forEach(span => {
         const mat = span.getAttribute("data-bars-diff");
         const diff = barsHave[mat] - (barsNeed[mat] || 0);
@@ -558,18 +585,12 @@
       });
     }
 
-    // listeners: quando alterar armas ou inputs verdes
     document.querySelectorAll(".input.green").forEach(input => {
       input.addEventListener("input", recalc);
     });
 
-    // primeira conta
     recalc();
   </script>
+<p>Made by Donald Trump</p>
 </body>
 </html>
-
-
-
-
-
