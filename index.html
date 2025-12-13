@@ -104,6 +104,10 @@
       padding: 16px 18px 18px;
     }
 
+    .card.full {
+      margin-top: 20px;
+    }
+
     .card h2 {
       margin: 0 0 8px;
       font-size: 16px;
@@ -131,6 +135,7 @@
       padding: 6px 6px;
       text-align: left;
       border-bottom: 1px solid rgba(31,41,55,0.7);
+      vertical-align: middle;
     }
 
     .table th {
@@ -155,7 +160,7 @@
       background: var(--input-bg);
       border-radius: 999px;
       border: 1px solid rgba(55,65,81,0.9);
-      padding: 4px 10px;
+      padding: 6px 10px;
       color: var(--text);
       font-size: 13px;
       outline: none;
@@ -195,6 +200,18 @@
       border-top: 2px solid rgba(148,163,184,0.45);
     }
 
+    .inline-row {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: end;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 650px) {
+      .inline-row { grid-template-columns: 1fr; }
+    }
+
     .footer-note {
       margin-top: 18px;
       font-size: 11px;
@@ -216,7 +233,7 @@
     <header class="header">
       <div class="title-block">
         <h1><span>Madrazo</span> Craft Calculadora</h1>
-        <p>Calculadora de armas & materiais – usar só nas “caixas” a verde</p>
+        <p>Calculadora de armas & materiais – usar só nas caixas a verde</p>
       </div>
       <div class="tag">Madrazo</div>
     </header>
@@ -257,41 +274,12 @@
             </tr>
           </tfoot>
         </table>
-
-        <br><br>
-
-        <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Peça</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="parts-body"></tbody>
-        </table>
-
-        <br><br>
-
-        <p class="section-label">Peças extra para craftar</p>
-        <p class="small">Aqui podes meter peças que vais craftar separadas das armas (ex: só engrenagens).</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Peça</th>
-              <th>Quantidade extra</th>
-            </tr>
-          </thead>
-          <tbody id="manual-parts-body"></tbody>
-        </table>
       </section>
 
       <!-- LADO DIREITO: materiais / mina -->
       <section class="card">
         <h2><span>2.</span> Materiais da mina</h2>
         <p>Só podes escrever nas caixas a <strong>verde</strong>.</p>
-
-        <br>
 
         <p class="section-label">Pepitas necessárias</p>
         <table class="table">
@@ -305,8 +293,6 @@
           </thead>
           <tbody id="pepitas-body"></tbody>
         </table>
-
-        <br><br>
 
         <p class="section-label">Refinado necessárias (barras)</p>
         <table class="table">
@@ -323,6 +309,71 @@
       </section>
     </div>
 
+    <!-- FIM: peças + dividir por pessoas + coletes -->
+    <section class="card full">
+      <h2><span>3.</span> Peças e divisão</h2>
+      <p>No fim tens as <strong>peças totais</strong>, as <strong>peças extra</strong> e a divisão <strong>por pessoa</strong>.</p>
+
+      <div class="inline-row">
+        <div>
+          <p class="section-label" style="margin-top:0">Dividir por pessoas</p>
+          <p class="small">Ex: se fores com 5 pessoas, mostra quanto cada um deve levar (arredonda para cima).</p>
+        </div>
+        <div>
+          <label class="small" for="people-count">Número de pessoas</label>
+          <input class="input green" type="number" min="1" value="1" id="people-count" />
+        </div>
+      </div>
+
+      <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Peça</th>
+            <th>Total</th>
+            <th>Por pessoa</th>
+          </tr>
+        </thead>
+        <tbody id="parts-body"></tbody>
+      </table>
+
+      <p class="section-label">Peças extra para craftar</p>
+      <p class="small">Aqui podes meter peças que vais craftar separadas das armas (ex: só engrenagens).</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Peça</th>
+            <th>Quantidade extra</th>
+          </tr>
+        </thead>
+        <tbody id="manual-parts-body"></tbody>
+      </table>
+
+      <p class="section-label">Craft de coletes</p>
+      <p class="small">Sem reputação (não conta). Ingredientes por colete: <strong>Alumínio refinado 15</strong>, <strong>Ferro refinado 15</strong>, <strong>Tecido 20</strong>.</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Colete Avançado</td>
+            <td style="max-width:220px">
+              <input class="input green" type="number" min="0" value="0" id="q-colete-avancado" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="small" style="margin-top:10px">
+        Nota: os coletes também entram nas contas das barras/pepitas lá em cima.
+      </p>
+    </section>
+
     <div class="footer-note">
       <span>
         Só podes escrever nas caixas a <strong>verde</strong>. Se tiveres por exemplo uma carrinha com
@@ -333,16 +384,16 @@
   </div>
 
   <script>
-    const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha"];
+    const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha", "Tecido"];
     const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
 
     const materialPerPart = {
-      Ferro:      { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0 },
-      Gatilho:    { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0 },
-      Mola:       { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2 },
-      Engrenagem: { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2 },
-      Cano:       { Carvao: 10, Ferro: 20, Prata: 20, Cobre: 0, Ouro: 0,  Aluminio: 40, Borracha: 0 },
-      Corp:       { Carvao: 10, Ferro: 40, Prata: 0,  Cobre: 0, Ouro: 0,  Aluminio: 40, Borracha: 0 }
+      Ferro:      { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0, Tecido: 0 },
+      Gatilho:    { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0, Tecido: 0 },
+      Mola:       { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2, Tecido: 0 },
+      Engrenagem: { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2, Tecido: 0 },
+      Cano:       { Carvao: 10, Ferro: 20,Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 },
+      Corp:       { Carvao: 10, Ferro: 40,Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 }
     };
 
     // IMPORTANTE: "Scar-SC" tem de ter aspas por causa do hífen
@@ -351,9 +402,20 @@
       "G36":     { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
     };
 
+    // Coletes (ingredientes em "barras"/unidades refinadas + tecido)
+    // Aqui assumimos que "Ferro" e "Aluminio" na tabela de barras são barras (refinado).
+    const vestBarsPerUnit = { Ferro: 15, Aluminio: 15 };
+    const vestUnitsPerUnit = { Tecido: 20 }; // tecido é unidade direta (não é barra/pepita)
+
     function pepitasToBars(material, pepitas) {
-      if (material === "Carvao" || material === "Borracha") return pepitas;
+      // Carvao/Borracha/Tecido são "unidade direta" na tua lógica (não dividir por 10)
+      if (material === "Carvao" || material === "Borracha" || material === "Tecido") return pepitas;
       return pepitas / 10;
+    }
+
+    function barsToPepitas(material, bars) {
+      if (material === "Carvao" || material === "Borracha" || material === "Tecido") return bars;
+      return bars * 10;
     }
 
     function parseAmount(str) {
@@ -373,21 +435,33 @@
       return n.toFixed(1);
     }
 
+    function ceilDiv(a, b) {
+      if (b <= 0) return a;
+      return Math.ceil(a / b);
+    }
+
     const partsBody = document.getElementById("parts-body");
     const manualPartsBody = document.getElementById("manual-parts-body");
     const pepitasBody = document.getElementById("pepitas-body");
     const refinedBody = document.getElementById("refined-body");
 
     function buildStaticRows() {
-      // tabela das peças totais
+      // tabela das peças totais (com coluna por pessoa)
       parts.forEach(part => {
         const tr = document.createElement("tr");
+
         const tdName = document.createElement("td");
-        const tdTotal = document.createElement("td");
         tdName.textContent = part;
+
+        const tdTotal = document.createElement("td");
         tdTotal.innerHTML = '<span class="result-number" data-part="' + part + '">0</span>';
+
+        const tdPerPerson = document.createElement("td");
+        tdPerPerson.innerHTML = '<span class="result-number" data-part-per-person="' + part + '">0</span>';
+
         tr.appendChild(tdName);
         tr.appendChild(tdTotal);
+        tr.appendChild(tdPerPerson);
         partsBody.appendChild(tr);
       });
 
@@ -396,13 +470,16 @@
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdInput = document.createElement("td");
+
         tdName.textContent = part;
+
         const input = document.createElement("input");
         input.className = "input green";
         input.type = "number";
         input.min = "0";
         input.value = "0";
         input.id = "extra-" + part;
+
         tdInput.appendChild(input);
         tr.appendChild(tdName);
         tr.appendChild(tdInput);
@@ -412,6 +489,7 @@
       // pepitas
       materials.forEach(mat => {
         const tr = document.createElement("tr");
+
         const tdName = document.createElement("td");
         const tdNeed = document.createElement("td");
         const tdHave = document.createElement("td");
@@ -438,6 +516,7 @@
       // barras refinado
       materials.forEach(mat => {
         const tr = document.createElement("tr");
+
         const tdName = document.createElement("td");
         const tdNeed = document.createElement("td");
         const tdHave = document.createElement("td");
@@ -465,6 +544,9 @@
     buildStaticRows();
 
     function recalc() {
+      const people = Math.max(1, parseInt((document.getElementById("people-count")?.value || "1"), 10));
+      const vestQty = Math.max(0, parseInt((document.getElementById("q-colete-avancado")?.value || "0"), 10));
+
       // quantidades das armas
       const weaponCounts = {};
       Object.keys(weaponParts).forEach(name => {
@@ -507,13 +589,19 @@
         });
       });
 
-      // actualizar tabela de peças
+      // actualizar tabela de peças (total + por pessoa)
       document.querySelectorAll("[data-part]").forEach(span => {
         const partName = span.getAttribute("data-part");
         span.textContent = totalParts[partName] || 0;
       });
 
-      // pepitas necessárias por material
+      document.querySelectorAll("[data-part-per-person]").forEach(span => {
+        const partName = span.getAttribute("data-part-per-person");
+        const total = totalParts[partName] || 0;
+        span.textContent = ceilDiv(total, people);
+      });
+
+      // pepitas necessárias por material (vindas das peças)
       const pepitasNeed = {};
       materials.forEach(m => pepitasNeed[m] = 0);
 
@@ -526,17 +614,34 @@
         });
       });
 
-      document.querySelectorAll("[data-pepitas-need]").forEach(span => {
-        const mat = span.getAttribute("data-pepitas-need");
-        span.textContent = formatNumber(pepitasNeed[mat] || 0);
-      });
-
-      // barras necessárias
+      // barras necessárias por material (vindas das pepitas)
       const barsNeed = {};
       materials.forEach(mat => {
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
+      // adicionar coletes às NECESSIDADES (barras e tecido)
+      // - Ferro/Aluminio somam em barrasNeed diretamente
+      // - Tecido soma em barsNeed também (como unidade direta)
+      if (vestQty > 0) {
+        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + vestQty * (vestBarsPerUnit.Ferro || 0);
+        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + vestQty * (vestBarsPerUnit.Aluminio || 0);
+        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + vestQty * (vestUnitsPerUnit.Tecido || 0);
+
+        // sincronizar pepitasNeed para a tabela de pepitas:
+        // barras -> pepitas (exceto Carvao/Borracha/Tecido)
+        pepitasNeed["Ferro"] = (pepitasNeed["Ferro"] || 0) + barsToPepitas("Ferro", vestQty * (vestBarsPerUnit.Ferro || 0));
+        pepitasNeed["Aluminio"] = (pepitasNeed["Aluminio"] || 0) + barsToPepitas("Aluminio", vestQty * (vestBarsPerUnit.Aluminio || 0));
+        pepitasNeed["Tecido"] = (pepitasNeed["Tecido"] || 0) + vestQty * (vestUnitsPerUnit.Tecido || 0);
+      }
+
+      // atualizar tabela pepitas necessárias
+      document.querySelectorAll("[data-pepitas-need]").forEach(span => {
+        const mat = span.getAttribute("data-pepitas-need");
+        span.textContent = formatNumber(pepitasNeed[mat] || 0);
+      });
+
+      // atualizar tabela barras necessárias
       document.querySelectorAll("[data-bars-need]").forEach(span => {
         const mat = span.getAttribute("data-bars-need");
         span.textContent = formatNumber(barsNeed[mat] || 0);
@@ -556,7 +661,7 @@
       // diferenças pepitas
       document.querySelectorAll("[data-pepitas-diff]").forEach(span => {
         const mat = span.getAttribute("data-pepitas-diff");
-        const diff = pepitasHave[mat] - (pepitasNeed[mat] || 0);
+        const diff = (pepitasHave[mat] || 0) - (pepitasNeed[mat] || 0);
         span.textContent = formatNumber(diff);
         span.classList.remove("negative", "positive");
         if (diff < 0) span.classList.add("negative");
@@ -566,7 +671,7 @@
       // diferenças barras
       document.querySelectorAll("[data-bars-diff]").forEach(span => {
         const mat = span.getAttribute("data-bars-diff");
-        const diff = barsHave[mat] - (barsNeed[mat] || 0);
+        const diff = (barsHave[mat] || 0) - (barsNeed[mat] || 0);
         span.textContent = formatNumber(diff);
         span.classList.remove("negative", "positive");
         if (diff < 0) span.classList.add("negative");
@@ -574,10 +679,16 @@
       });
     }
 
-    document.querySelectorAll(".input.green").forEach(input => {
-      input.addEventListener("input", recalc);
-    });
+    // inputs verdes + pessoas
+    function bindAll() {
+      document.querySelectorAll(".input.green").forEach(input => {
+        input.addEventListener("input", recalc);
+      });
+      const peopleInput = document.getElementById("people-count");
+      if (peopleInput) peopleInput.addEventListener("input", recalc);
+    }
 
+    bindAll();
     recalc();
   </script>
 
