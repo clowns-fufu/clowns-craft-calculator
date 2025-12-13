@@ -193,8 +193,7 @@
       margin: 18px 0 8px;
       padding-top: 6px;
       border-top: 2px solid rgba(148,163,184,0.45);
-}
-
+    }
 
     .footer-note {
       margin-top: 18px;
@@ -240,17 +239,16 @@
           <tbody>
             <tr>
               <td>Scar-SC</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC-SC" /></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC" /></td>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar-SC" /></td>
               <td><span class="result-number" data-weapon-total="Scar-SC">0</span></td>
             </tr>
             <tr>
               <td>G36</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-Revolver" /></td>
-              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Revolver" /></td>
-              <td><span class="result-number" data-weapon-total="Revolver">0</span></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-G36" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-G36" /></td>
+              <td><span class="result-number" data-weapon-total="G36">0</span></td>
             </tr>
-            <tr>
           </tbody>
           <tfoot>
             <tr>
@@ -273,8 +271,7 @@
           <tbody id="parts-body"></tbody>
         </table>
 
-        <br>
-        <br>
+        <br><br>
 
         <p class="section-label">Peças extra para craftar</p>
         <p class="small">Aqui podes meter peças que vais craftar separadas das armas (ex: só engrenagens).</p>
@@ -340,17 +337,17 @@
     const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
 
     const materialPerPart = {
-      Ferro:      { Carvao: 10,  Ferro: 00, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0 },
-      Gatilho:    { Carvao: 10,  Ferro: 0,  Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0 },
-      Mola:       { Carvao: 10,  Ferro: 0,  Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2 },
-      Engrenagem: { Carvao: 10,  Ferro: 0,  Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40,  Borracha: 2 },
-      Cano:       { Carvao: 10,  Ferro: 20, Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40,  Borracha: 0 },
-      Corp:       { Carvao: 10,  Ferro: 40, Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 }
+      Ferro:      { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0 },
+      Gatilho:    { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0 },
+      Mola:       { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2 },
+      Engrenagem: { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2 },
+      Cano:       { Carvao: 10, Ferro: 20,Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 },
+      Corp:       { Carvao: 10, Ferro: 40,Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 }
     };
 
     const weaponParts = {
-      Scar-SC:      { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
-      G36:  { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
+      "Scar-SC": { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
+      "G36":     { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
     };
 
     function pepitasToBars(material, pepitas) {
@@ -478,13 +475,14 @@
       let weaponsTotal = 0;
       Object.keys(weaponParts).forEach(name => {
         const priceInput = document.getElementById("price-" + name);
-        const price = priceInput ? parseFloat(priceInput.value.replace(",", ".") || "0") : 0;
+        const price = priceInput ? parseFloat((priceInput.value || "0").replace(",", ".")) : 0;
         const qty = weaponCounts[name] || 0;
         const total = price * qty;
         const span = document.querySelector('[data-weapon-total="' + name + '"]');
         if (span) span.textContent = formatNumber(total);
         weaponsTotal += total;
       });
+
       const weaponsTotalSpan = document.getElementById("weapons-total");
       if (weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
 
@@ -579,11 +577,7 @@
 
     recalc();
   </script>
-<p>Made by Donald Trump</p>
+
+  <p>Made by Donald Trump</p>
 </body>
 </html>
-
-
-
-
-
