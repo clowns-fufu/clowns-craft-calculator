@@ -179,9 +179,7 @@
     .small { font-size: 11px; color: var(--text-soft); }
 
     .result-number { font-variant-numeric: tabular-nums; }
-
     .result-number.negative { color: var(--danger); }
-
     .result-number.positive { color: var(--success); }
 
     .section-label {
@@ -323,6 +321,33 @@
       </section>
     </div>
 
+    <!-- TABELA 3: Craft de colete -->
+    <section class="card" style="margin-top:20px">
+      <h2><span>3.</span> Craft de Colete</h2>
+      <p>Colete Avançado (sem reputação)</p>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Colete Avançado</td>
+            <td>
+              <input class="input green" type="number" min="0" value="0" id="q-colete" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="small" style="margin-top:8px">
+        Ingredientes por colete: Ferro refinado 15, Alumínio refinado 15, Tecido 20
+      </p>
+    </section>
+
     <div class="footer-note">
       <span>
         Só podes escrever nas caixas a <strong>verde</strong>. Se tiveres por exemplo uma carrinha com
@@ -333,16 +358,17 @@
   </div>
 
   <script>
-    const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha"];
+    // Adicionado "Tecido" para o craft de colete
+    const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha", "Tecido"];
     const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
 
     const materialPerPart = {
-      Ferro:      { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0 },
-      Gatilho:    { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0 },
-      Mola:       { Carvao: 10, Ferro: 0, Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2 },
-      Engrenagem: { Carvao: 10, Ferro: 0, Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2 },
-      Cano:       { Carvao: 10, Ferro: 20,Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 },
-      Corp:       { Carvao: 10, Ferro: 40,Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0 }
+      Ferro:      { Carvao: 10, Ferro: 0,  Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0, Tecido: 0 },
+      Gatilho:    { Carvao: 10, Ferro: 0,  Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0, Tecido: 0 },
+      Mola:       { Carvao: 10, Ferro: 0,  Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2, Tecido: 0 },
+      Engrenagem: { Carvao: 10, Ferro: 0,  Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2, Tecido: 0 },
+      Cano:       { Carvao: 10, Ferro: 20, Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 },
+      Corp:       { Carvao: 10, Ferro: 40, Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 }
     };
 
     const weaponParts = {
@@ -350,8 +376,9 @@
       "G36":     { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
     };
 
+    // Carvao / Borracha / Tecido são "unidades diretas" (não dividir por 10)
     function pepitasToBars(material, pepitas) {
-      if (material === "Carvao" || material === "Borracha") return pepitas;
+      if (material === "Carvao" || material === "Borracha" || material === "Tecido") return pepitas;
       return pepitas / 10;
     }
 
@@ -510,7 +537,7 @@
         span.textContent = totalParts[partName] || 0;
       });
 
-      // pepitas necessárias por material
+      // pepitas necessárias por material (das peças)
       const pepitasNeed = {};
       materials.forEach(m => pepitasNeed[m] = 0);
 
@@ -523,17 +550,37 @@
         });
       });
 
-      document.querySelectorAll("[data-pepitas-need]").forEach(span => {
-        const mat = span.getAttribute("data-pepitas-need");
-        span.textContent = formatNumber(pepitasNeed[mat] || 0);
-      });
-
-      // barras necessárias
+      // barras necessárias (a partir das pepitas)
       const barsNeed = {};
       materials.forEach(mat => {
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
+      // COLETE AVANÇADO (sem reputação)
+      const coleteQty = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
+      if (coleteQty > 0) {
+        // Barras (Ferro/Aluminio) somam direto nas barras
+        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coleteQty * 15;
+        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coleteQty * 15;
+
+        // Tecido é unidade direta
+        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coleteQty * 20;
+
+        // Para a tabela de pepitas: barras -> pepitas (10 pepitas = 1 barra)
+        pepitasNeed["Ferro"] += coleteQty * 15 * 10;
+        pepitasNeed["Aluminio"] += coleteQty * 15 * 10;
+
+        // Tecido (unidade direta)
+        pepitasNeed["Tecido"] += coleteQty * 20;
+      }
+
+      // atualizar tabela pepitas necessárias
+      document.querySelectorAll("[data-pepitas-need]").forEach(span => {
+        const mat = span.getAttribute("data-pepitas-need");
+        span.textContent = formatNumber(pepitasNeed[mat] || 0);
+      });
+
+      // atualizar tabela barras necessárias
       document.querySelectorAll("[data-bars-need]").forEach(span => {
         const mat = span.getAttribute("data-bars-need");
         span.textContent = formatNumber(barsNeed[mat] || 0);
@@ -553,7 +600,7 @@
       // diferenças pepitas
       document.querySelectorAll("[data-pepitas-diff]").forEach(span => {
         const mat = span.getAttribute("data-pepitas-diff");
-        const diff = pepitasHave[mat] - (pepitasNeed[mat] || 0);
+        const diff = (pepitasHave[mat] || 0) - (pepitasNeed[mat] || 0);
         span.textContent = formatNumber(diff);
         span.classList.remove("negative", "positive");
         if (diff < 0) span.classList.add("negative");
@@ -563,7 +610,7 @@
       // diferenças barras
       document.querySelectorAll("[data-bars-diff]").forEach(span => {
         const mat = span.getAttribute("data-bars-diff");
-        const diff = barsHave[mat] - (barsNeed[mat] || 0);
+        const diff = (barsHave[mat] || 0) - (barsNeed[mat] || 0);
         span.textContent = formatNumber(diff);
         span.classList.remove("negative", "positive");
         if (diff < 0) span.classList.add("negative");
