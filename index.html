@@ -131,6 +131,7 @@
       padding: 6px 6px;
       text-align: left;
       border-bottom: 1px solid rgba(31,41,55,0.7);
+      vertical-align: middle;
     }
 
     .table th {
@@ -259,11 +260,14 @@
         <br><br>
 
         <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
+        <p class="small">Na coluna "Tens" podes escrever tipo 2+3 para somar.</p>
         <table class="table">
           <thead>
             <tr>
               <th>Peça</th>
               <th>Total</th>
+              <th class="small">Tens</th>
+              <th>Falta / sobra</th>
             </tr>
           </thead>
           <tbody id="parts-body"></tbody>
@@ -405,15 +409,31 @@
     const refinedBody = document.getElementById("refined-body");
 
     function buildStaticRows() {
-      // tabela das peças totais
+      // tabela das peças totais (com "tens" e "falta/sobra")
       parts.forEach(part => {
         const tr = document.createElement("tr");
+
         const tdName = document.createElement("td");
-        const tdTotal = document.createElement("td");
         tdName.textContent = part;
+
+        const tdTotal = document.createElement("td");
         tdTotal.innerHTML = '<span class="result-number" data-part="' + part + '">0</span>';
+
+        const tdHave = document.createElement("td");
+        const inputHave = document.createElement("input");
+        inputHave.className = "input green";
+        inputHave.placeholder = "ex: 2+3";
+        inputHave.setAttribute("data-part-have-input", part);
+        tdHave.appendChild(inputHave);
+
+        const tdDiff = document.createElement("td");
+        tdDiff.innerHTML = '<span class="result-number" data-part-diff="' + part + '">0</span>';
+
         tr.appendChild(tdName);
         tr.appendChild(tdTotal);
+        tr.appendChild(tdHave);
+        tr.appendChild(tdDiff);
+
         partsBody.appendChild(tr);
       });
 
@@ -422,13 +442,16 @@
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdInput = document.createElement("td");
+
         tdName.textContent = part;
+
         const input = document.createElement("input");
         input.className = "input green";
         input.type = "number";
         input.min = "0";
         input.value = "0";
         input.id = "extra-" + part;
+
         tdInput.appendChild(input);
         tr.appendChild(tdName);
         tr.appendChild(tdInput);
@@ -531,10 +554,24 @@
         });
       });
 
-      // actualizar tabela de peças
+      // atualizar "Total" das peças
       document.querySelectorAll("[data-part]").forEach(span => {
         const partName = span.getAttribute("data-part");
         span.textContent = totalParts[partName] || 0;
+      });
+
+      // calcular "Tens" e "Falta/Sobra" das peças
+      document.querySelectorAll("[data-part-diff]").forEach(span => {
+        const partName = span.getAttribute("data-part-diff");
+        const totalNeed = totalParts[partName] || 0;
+        const haveInput = document.querySelector('[data-part-have-input="' + partName + '"]');
+        const have = parseAmount(haveInput ? haveInput.value : "");
+        const diff = have - totalNeed;
+
+        span.textContent = formatNumber(diff);
+        span.classList.remove("negative", "positive");
+        if (diff < 0) span.classList.add("negative");
+        if (diff > 0) span.classList.add("positive");
       });
 
       // pepitas necessárias por material (das peças)
@@ -556,21 +593,19 @@
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
-      // COLETE AVANÇADO (sem reputação)
+      // COLETE AVANÇADO
       const coleteQty = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
       if (coleteQty > 0) {
-        // Barras (Ferro/Aluminio) somam direto nas barras
+        // Barras (Ferro/Aluminio)
         barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coleteQty * 15;
         barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coleteQty * 15;
 
-        // Tecido é unidade direta
+        // Tecido (unidade direta)
         barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coleteQty * 20;
 
-        // Para a tabela de pepitas: barras -> pepitas (10 pepitas = 1 barra)
+        // Pepitas: barras -> pepitas
         pepitasNeed["Ferro"] += coleteQty * 15 * 10;
         pepitasNeed["Aluminio"] += coleteQty * 15 * 10;
-
-        // Tecido (unidade direta)
         pepitasNeed["Tecido"] += coleteQty * 20;
       }
 
@@ -618,6 +653,7 @@
       });
     }
 
+    // Recalcular em qualquer input verde (inclui: armas, preços, peças extra, pepitas/barras, colete, e agora "tens" das peças)
     document.querySelectorAll(".input.green").forEach(input => {
       input.addEventListener("input", recalc);
     });
@@ -628,4 +664,3 @@
   <p>Made by Donald Trump</p>
 </body>
 </html>
-
