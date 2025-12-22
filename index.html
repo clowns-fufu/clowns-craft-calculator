@@ -15,199 +15,165 @@
   <title>Madrazo – Craft Calculadora</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg: #05060a;
-      --bg-alt: #0b0e16;
-      --accent: #f97316;
-      --accent-soft: rgba(249,115,22,0.15);
-      --text: #f9fafb;
-      --text-soft: #9ca3af;
-      --danger: #ef4444;
-      --success: #22c55e;
-      --border: #1f2933;
-      --input-bg: #020617;
-      --green-input: #022c22;
+    :root{
+      --bg:#05060a;
+      --bg-alt:#0b0e16;
+      --accent:#f97316;
+      --accent-soft:rgba(249,115,22,0.15);
+      --text:#f9fafb;
+      --text-soft:#9ca3af;
+      --danger:#ef4444;
+      --success:#22c55e;
+      --border:#1f2933;
+      --input-bg:#020617;
+      --green-input:#022c22;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-      color: var(--text);
-      padding: 20px;
-      min-height: 100vh;
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top,#111827 0,#020617 45%,#000 100%);
+      color:var(--text);
+      padding:20px;
+      min-height:100vh;
     }
-
-    .app {
-      max-width: 1265px;
-      margin: 0 auto;
-      background: linear-gradient(145deg, #020617 0, #020617 40%, #020617 100%);
-      border-radius: 24px;
-      padding: 24px 24px 32px;
-      border: 1px solid #1f2937;
-      box-shadow:
-        0 40px 80px rgba(0,0,0,0.6),
-        0 0 0 1px rgba(15,23,42,0.9);
+    .app{
+      max-width:1265px;
+      margin:0 auto;
+      background:linear-gradient(145deg,#020617 0,#020617 40%,#020617 100%);
+      border-radius:24px;
+      padding:24px 24px 32px;
+      border:1px solid #1f2937;
+      box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(15,23,42,.9);
     }
-
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
+    .header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:24px;
     }
-
-    .title-block h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+    .title-block h1{
+      margin:0;
+      font-size:28px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
-
-    .title-block h1 span { color: var(--accent); }
-
-    .title-block p {
-      margin: 4px 0 0;
-      font-size: 13px;
-      color: var(--text-soft);
+    .title-block h1 span{color:var(--accent);}
+    .title-block p{
+      margin:4px 0 0;
+      font-size:13px;
+      color:var(--text-soft);
     }
-
-    .tag {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--accent-soft);
-      background: rgba(15,23,42,0.9);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      white-space: nowrap;
+    .tag{
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid var(--accent-soft);
+      background:rgba(15,23,42,.9);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      color:var(--accent);
+      white-space:nowrap;
     }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr);
-      gap: 20px;
+    .grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1.3fr);
+      gap:20px;
     }
-
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: minmax(0, 1fr); }
+    @media (max-width:900px){
+      .grid{grid-template-columns:minmax(0,1fr);}
     }
-
-    .card {
-      background: radial-gradient(circle at top left, #111827 0, #020617 55%);
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      padding: 16px 18px 18px;
+    .card{
+      background:radial-gradient(circle at top left,#111827 0,#020617 55%);
+      border-radius:18px;
+      border:1px solid var(--border);
+      padding:16px 18px 18px;
     }
-
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--text-soft);
+    .card h2{
+      margin:0 0 8px;
+      font-size:16px;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      color:var(--text-soft);
     }
-
-    .card h2 span { color: var(--accent); }
-
-    .card p {
-      margin: 0 0 12px;
-      font-size: 13px;
-      color: var(--text-soft);
+    .card h2 span{color:var(--accent);}
+    .card p{
+      margin:0 0 12px;
+      font-size:13px;
+      color:var(--text-soft);
     }
-
-    .table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
+    .table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
     }
-
-    .table th,
-    .table td {
-      padding: 6px 6px;
-      text-align: left;
-      border-bottom: 1px solid rgba(31,41,55,0.7);
-      vertical-align: middle;
+    .table th,.table td{
+      padding:6px 6px;
+      text-align:left;
+      border-bottom:1px solid rgba(31,41,55,.7);
+      vertical-align:middle;
     }
-
-    .table th {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--text-soft);
+    .table th{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color:var(--text-soft);
     }
-
-    .table tr:last-child td { border-bottom: none; }
-
-    .table tfoot td {
-      border-top: 1px solid rgba(55,65,81,0.9);
-      border-bottom: none;
-      font-weight: 600;
-      padding-top: 7px;
-      font-size: 13px;
+    .table tr:last-child td{border-bottom:none;}
+    .table tfoot td{
+      border-top:1px solid rgba(55,65,81,.9);
+      border-bottom:none;
+      font-weight:600;
+      padding-top:7px;
+      font-size:13px;
     }
-
-    .input {
-      width: 100%;
-      background: var(--input-bg);
-      border-radius: 999px;
-      border: 1px solid rgba(55,65,81,0.9);
-      padding: 4px 10px;
-      color: var(--text);
-      font-size: 13px;
-      outline: none;
+    .input{
+      width:100%;
+      background:var(--input-bg);
+      border-radius:999px;
+      border:1px solid rgba(55,65,81,.9);
+      padding:4px 10px;
+      color:var(--text);
+      font-size:13px;
+      outline:none;
     }
-
-    .input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(249,115,22,0.3);
+    .input:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px rgba(249,115,22,.3);
     }
-
-    .input.green {
-      background: var(--green-input);
-      border-color: #16a34a;
+    .input.green{
+      background:var(--green-input);
+      border-color:#16a34a;
     }
-
-    .input::placeholder {
-      color: #6b7280;
-      font-size: 12px;
+    .input::placeholder{
+      color:#6b7280;
+      font-size:12px;
     }
-
-    .small { font-size: 11px; color: var(--text-soft); }
-
-    .result-number { font-variant-numeric: tabular-nums; }
-    .result-number.negative { color: var(--danger); }
-    .result-number.positive { color: var(--success); }
-
-    .section-label {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--accent);
-      margin: 18px 0 8px;
-      padding-top: 6px;
-      border-top: 2px solid rgba(148,163,184,0.45);
+    .small{font-size:11px;color:var(--text-soft);}
+    .result-number{font-variant-numeric:tabular-nums;}
+    .result-number.negative{color:var(--danger);}
+    .result-number.positive{color:var(--success);}
+    .section-label{
+      font-size:13px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.22em;
+      color:var(--accent);
+      margin:18px 0 8px;
+      padding-top:6px;
+      border-top:2px solid rgba(148,163,184,.45);
     }
-
-    .footer-note {
-      margin-top: 18px;
-      font-size: 11px;
-      color: var(--text-soft);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
+    .footer-note{
+      margin-top:18px;
+      font-size:11px;
+      color:var(--text-soft);
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
     }
-
-    .footer-note strong {
-      color: var(--accent);
-      font-weight: 500;
-    }
+    .footer-note strong{color:var(--accent);font-weight:500;}
   </style>
 </head>
 <body>
@@ -221,7 +187,7 @@
     </header>
 
     <div class="grid">
-      <!-- LADO ESQUERDO: armas -->
+      <!-- LADO ESQUERDO -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
         <p>Escreve quantas <strong>Scar-SC, G36</strong> vais craftar ou vender e, se quiseres, o preço por arma.</p>
@@ -238,14 +204,14 @@
           <tbody>
             <tr>
               <td>Scar-SC</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC" /></td>
-              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar-SC" /></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC"></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar-SC"></td>
               <td><span class="result-number" data-weapon-total="Scar-SC">0</span></td>
             </tr>
             <tr>
               <td>G36</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-G36" /></td>
-              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-G36" /></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-G36"></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-G36"></td>
               <td><span class="result-number" data-weapon-total="G36">0</span></td>
             </tr>
           </tbody>
@@ -288,7 +254,7 @@
         </table>
       </section>
 
-      <!-- LADO DIREITO: materiais / mina -->
+      <!-- LADO DIREITO -->
       <section class="card">
         <h2><span>2.</span> Materiais da mina</h2>
         <p>Só podes escrever nas caixas a <strong>verde</strong>.</p>
@@ -300,8 +266,8 @@
           <thead>
             <tr>
               <th>Material</th>
-              <th>Pepitas<br />necessárias</th>
-              <th class="small">Pepitas que tens<br /><span class="small">(podes escrever tipo 50+68)</span></th>
+              <th>Pepitas<br>necessárias</th>
+              <th class="small">Pepitas que tens<br><span class="small">(podes escrever tipo 50+68)</span></th>
               <th>Falta / sobra</th>
             </tr>
           </thead>
@@ -315,8 +281,8 @@
           <thead>
             <tr>
               <th>Material</th>
-              <th>Barras<br />necessárias</th>
-              <th class="small">Barras que tens<br /><span class="small">(podes escrever 3+7)</span></th>
+              <th>Barras<br>necessárias</th>
+              <th class="small">Barras que tens<br><span class="small">(podes escrever 3+7)</span></th>
               <th>Falta / sobra</th>
             </tr>
           </thead>
@@ -325,10 +291,6 @@
             <tr>
               <td colspan="3">Total barras necessárias (só minérios)</td>
               <td><span class="result-number" id="bars-total-need-ores">0</span></td>
-            </tr>
-            <tr>
-              <td colspan="3">Total barras que tens (só minérios)</td>
-              <td><span class="result-number" id="bars-total-have-ores">0</span></td>
             </tr>
             <tr>
               <td colspan="3">Total falta / sobra (só minérios)</td>
@@ -350,7 +312,7 @@
           </thead>
           <tbody>
             <tr>
-              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="bar-price" /></td>
+              <td><input class="input green" type="number" min="0" step="0.01" value="0" id="bar-price"></td>
               <td><span class="result-number" id="bars-missing-ores">0</span></td>
               <td><span class="result-number" id="bars-total-eur">0</span></td>
             </tr>
@@ -359,7 +321,7 @@
       </section>
     </div>
 
-    <!-- TABELA 3: Craft de colete -->
+    <!-- TABELA 3 -->
     <section class="card" style="margin-top:20px">
       <h2><span>3.</span> Craft de Colete</h2>
       <p>Colete Avançado</p>
@@ -374,9 +336,7 @@
         <tbody>
           <tr>
             <td>Colete Avançado</td>
-            <td>
-              <input class="input green" type="number" min="0" value="0" id="q-colete" />
-            </td>
+            <td><input class="input green" type="number" min="0" value="0" id="q-colete"></td>
           </tr>
         </tbody>
       </table>
@@ -396,45 +356,45 @@
   </div>
 
   <script>
-    const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha", "Tecido"];
-    const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
+    const materials = ["Carvao","Ferro","Prata","Cobre","Ouro","Aluminio","Borracha","Tecido"];
+    const parts = ["Ferro","Gatilho","Mola","Engrenagem","Cano","Corp"];
 
-    // SÓ os minérios que queres somar
-    const ORE_MATS = ["Ferro", "Prata", "Cobre", "Ouro", "Aluminio"];
+    // SÓ os minérios para totais
+    const ORE_MATS = ["Ferro","Prata","Cobre","Ouro","Aluminio"];
 
     const materialPerPart = {
-      Ferro:      { Carvao: 10, Ferro: 0,  Prata: 40, Cobre: 20, Ouro: 0,  Aluminio: 0,  Borracha: 0, Tecido: 0 },
-      Gatilho:    { Carvao: 10, Ferro: 0,  Prata: 0,  Cobre: 0,  Ouro: 80, Aluminio: 0,  Borracha: 0, Tecido: 0 },
-      Mola:       { Carvao: 10, Ferro: 0,  Prata: 40, Cobre: 0,  Ouro: 40, Aluminio: 0,  Borracha: 2, Tecido: 0 },
-      Engrenagem: { Carvao: 10, Ferro: 0,  Prata: 0,  Cobre: 40, Ouro: 0,  Aluminio: 40, Borracha: 2, Tecido: 0 },
-      Cano:       { Carvao: 10, Ferro: 20, Prata: 20, Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 },
-      Corp:       { Carvao: 10, Ferro: 40, Prata: 0,  Cobre: 0,  Ouro: 0,  Aluminio: 40, Borracha: 0, Tecido: 0 }
+      Ferro:      { Carvao:10, Ferro:0,  Prata:40, Cobre:20, Ouro:0,  Aluminio:0,  Borracha:0, Tecido:0 },
+      Gatilho:    { Carvao:10, Ferro:0,  Prata:0,  Cobre:0,  Ouro:80, Aluminio:0,  Borracha:0, Tecido:0 },
+      Mola:       { Carvao:10, Ferro:0,  Prata:40, Cobre:0,  Ouro:40, Aluminio:0,  Borracha:2, Tecido:0 },
+      Engrenagem: { Carvao:10, Ferro:0,  Prata:0,  Cobre:40, Ouro:0,  Aluminio:40, Borracha:2, Tecido:0 },
+      Cano:       { Carvao:10, Ferro:20, Prata:20, Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 },
+      Corp:       { Carvao:10, Ferro:40, Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
     const weaponParts = {
-      "Scar-SC": { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
-      "G36":     { Ferro: 1, Gatilho: 1, Mola: 2, Engrenagem: 2, Cano: 1, Corp: 1 },
+      "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
+      "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
     };
 
-    function pepitasToBars(material, pepitas) {
-      if (material === "Carvao" || material === "Borracha" || material === "Tecido") return pepitas;
-      return pepitas / 10;
+    function pepitasToBars(material, pepitas){
+      if(material==="Carvao" || material==="Borracha" || material==="Tecido") return pepitas;
+      return pepitas/10;
     }
 
-    function parseAmount(str) {
-      if (!str) return 0;
+    function parseAmount(str){
+      if(!str) return 0;
       const pieces = str.split("+");
       let total = 0;
-      for (const p of pieces) {
-        const n = parseFloat(p.trim().replace(",", "."));
-        if (!isNaN(n)) total += n;
+      for(const p of pieces){
+        const n = parseFloat(p.trim().replace(",","."));
+        if(!isNaN(n)) total += n;
       }
       return total;
     }
 
-    function formatNumber(n) {
-      if (Math.abs(n) < 0.00001) return "0";
-      if (Number.isInteger(n)) return n.toString();
+    function formatNumber(n){
+      if(Math.abs(n) < 0.00001) return "0";
+      if(Number.isInteger(n)) return n.toString();
       return n.toFixed(1);
     }
 
@@ -443,15 +403,16 @@
     const pepitasBody = document.getElementById("pepitas-body");
     const refinedBody = document.getElementById("refined-body");
 
-    function buildStaticRows() {
-      parts.forEach(part => {
+    function buildStaticRows(){
+      // peças totais + tens + diff
+      parts.forEach(part=>{
         const tr = document.createElement("tr");
 
         const tdName = document.createElement("td");
         tdName.textContent = part;
 
         const tdTotal = document.createElement("td");
-        tdTotal.innerHTML = '<span class="result-number" data-part="' + part + '">0</span>';
+        tdTotal.innerHTML = '<span class="result-number" data-part="'+part+'">0</span>';
 
         const tdHave = document.createElement("td");
         const inputHave = document.createElement("input");
@@ -461,17 +422,17 @@
         tdHave.appendChild(inputHave);
 
         const tdDiff = document.createElement("td");
-        tdDiff.innerHTML = '<span class="result-number" data-part-diff="' + part + '">0</span>';
+        tdDiff.innerHTML = '<span class="result-number" data-part-diff="'+part+'">0</span>';
 
         tr.appendChild(tdName);
         tr.appendChild(tdTotal);
         tr.appendChild(tdHave);
         tr.appendChild(tdDiff);
-
         partsBody.appendChild(tr);
       });
 
-      parts.forEach(part => {
+      // peças extra
+      parts.forEach(part=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdInput = document.createElement("td");
@@ -483,7 +444,7 @@
         input.type = "number";
         input.min = "0";
         input.value = "0";
-        input.id = "extra-" + part;
+        input.id = "extra-"+part;
 
         tdInput.appendChild(input);
         tr.appendChild(tdName);
@@ -491,7 +452,8 @@
         manualPartsBody.appendChild(tr);
       });
 
-      materials.forEach(mat => {
+      // pepitas
+      materials.forEach(mat=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdNeed = document.createElement("td");
@@ -499,7 +461,7 @@
         const tdDiff = document.createElement("td");
 
         tdName.textContent = mat;
-        tdNeed.innerHTML = '<span class="result-number" data-pepitas-need="' + mat + '">0</span>';
+        tdNeed.innerHTML = '<span class="result-number" data-pepitas-need="'+mat+'">0</span>';
 
         const inputPep = document.createElement("input");
         inputPep.className = "input green";
@@ -507,7 +469,7 @@
         inputPep.setAttribute("data-pepitas-have-input", mat);
         tdHave.appendChild(inputPep);
 
-        tdDiff.innerHTML = '<span class="result-number" data-pepitas-diff="' + mat + '">0</span>';
+        tdDiff.innerHTML = '<span class="result-number" data-pepitas-diff="'+mat+'">0</span>';
 
         tr.appendChild(tdName);
         tr.appendChild(tdNeed);
@@ -516,7 +478,8 @@
         pepitasBody.appendChild(tr);
       });
 
-      materials.forEach(mat => {
+      // barras
+      materials.forEach(mat=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdNeed = document.createElement("td");
@@ -524,7 +487,7 @@
         const tdDiff = document.createElement("td");
 
         tdName.textContent = mat;
-        tdNeed.innerHTML = '<span class="result-number" data-bars-need="' + mat + '">0</span>';
+        tdNeed.innerHTML = '<span class="result-number" data-bars-need="'+mat+'">0</span>';
 
         const inputBar = document.createElement("input");
         inputBar.className = "input green";
@@ -532,7 +495,7 @@
         inputBar.setAttribute("data-bars-have-input", mat);
         tdHave.appendChild(inputBar);
 
-        tdDiff.innerHTML = '<span class="result-number" data-bars-diff="' + mat + '">0</span>';
+        tdDiff.innerHTML = '<span class="result-number" data-bars-diff="'+mat+'">0</span>';
 
         tr.appendChild(tdName);
         tr.appendChild(tdNeed);
@@ -544,91 +507,99 @@
 
     buildStaticRows();
 
-    function recalc() {
+    function recalc(){
+      // armas
       const weaponCounts = {};
-      Object.keys(weaponParts).forEach(name => {
-        const input = document.getElementById("q-" + name);
+      Object.keys(weaponParts).forEach(name=>{
+        const input = document.getElementById("q-"+name);
         weaponCounts[name] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
+      // preços
       let weaponsTotal = 0;
-      Object.keys(weaponParts).forEach(name => {
-        const priceInput = document.getElementById("price-" + name);
+      Object.keys(weaponParts).forEach(name=>{
+        const priceInput = document.getElementById("price-"+name);
         const price = priceInput ? parseFloat((priceInput.value || "0").replace(",", ".")) : 0;
         const qty = weaponCounts[name] || 0;
         const total = price * qty;
-        const span = document.querySelector('[data-weapon-total="' + name + '"]');
-        if (span) span.textContent = formatNumber(total);
+
+        const span = document.querySelector('[data-weapon-total="'+name+'"]');
+        if(span) span.textContent = formatNumber(total);
+
         weaponsTotal += total;
       });
 
       const weaponsTotalSpan = document.getElementById("weapons-total");
-      if (weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
+      if(weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
 
+      // peças extra
       const extraParts = {};
-      parts.forEach(p => {
-        const input = document.getElementById("extra-" + p);
+      parts.forEach(p=>{
+        const input = document.getElementById("extra-"+p);
         extraParts[p] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
+      // total peças = armas + extra
       const totalParts = {};
-      parts.forEach(p => totalParts[p] = extraParts[p] || 0);
+      parts.forEach(p=> totalParts[p] = extraParts[p] || 0);
 
-      Object.entries(weaponParts).forEach(([weapon, partsNeeded]) => {
+      Object.entries(weaponParts).forEach(([weapon, partsNeeded])=>{
         const q = weaponCounts[weapon] || 0;
-        Object.entries(partsNeeded).forEach(([partName, qtyPerWeapon]) => {
+        Object.entries(partsNeeded).forEach(([partName, qtyPerWeapon])=>{
           totalParts[partName] += q * qtyPerWeapon;
         });
       });
 
-      document.querySelectorAll("[data-part]").forEach(span => {
+      // update total peças
+      document.querySelectorAll("[data-part]").forEach(span=>{
         const partName = span.getAttribute("data-part");
         span.textContent = totalParts[partName] || 0;
       });
 
-      document.querySelectorAll("[data-part-diff]").forEach(span => {
+      // diff peças
+      document.querySelectorAll("[data-part-diff]").forEach(span=>{
         const partName = span.getAttribute("data-part-diff");
         const totalNeed = totalParts[partName] || 0;
-        const haveInput = document.querySelector('[data-part-have-input="' + partName + '"]');
+        const haveInput = document.querySelector('[data-part-have-input="'+partName+'"]');
         const have = parseAmount(haveInput ? haveInput.value : "");
         const diff = have - totalNeed;
 
         span.textContent = formatNumber(diff);
-        span.classList.remove("negative", "positive");
-        if (diff < 0) span.classList.add("negative");
-        if (diff > 0) span.classList.add("positive");
+        span.classList.remove("negative","positive");
+        if(diff < 0) span.classList.add("negative");
+        if(diff > 0) span.classList.add("positive");
       });
 
-      // pepitas necessárias por material (das peças EM FALTA)
+      // pepitas (a partir das peças EM FALTA)
       const pepitasNeed = {};
       materials.forEach(m => pepitasNeed[m] = 0);
 
       const missingParts = {};
-      parts.forEach(partName => {
+      parts.forEach(partName=>{
         const totalNeed = totalParts[partName] || 0;
-        const haveInput = document.querySelector('[data-part-have-input="' + partName + '"]');
+        const haveInput = document.querySelector('[data-part-have-input="'+partName+'"]');
         const have = parseAmount(haveInput ? haveInput.value : "");
         missingParts[partName] = Math.max(0, totalNeed - have);
       });
 
-      Object.entries(missingParts).forEach(([partName, missingQty]) => {
+      Object.entries(missingParts).forEach(([partName, missingQty])=>{
         const map = materialPerPart[partName];
-        if (!map) return;
-        materials.forEach(mat => {
+        if(!map) return;
+        materials.forEach(mat=>{
           const perPiece = map[mat] || 0;
           pepitasNeed[mat] += missingQty * perPiece;
         });
       });
 
-      // barras necessárias (a partir das pepitas)
+      // barras necessárias
       const barsNeed = {};
-      materials.forEach(mat => {
+      materials.forEach(mat=>{
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
-      // COLETE AVANÇADO
+      // colete
       const coleteQty = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
-      if (coleteQty > 0) {
+      if(coleteQty > 0){
         barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coleteQty * 15;
         barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coleteQty * 15;
 
@@ -639,86 +610,86 @@
         pepitasNeed["Tecido"] += coleteQty * 20;
       }
 
-      document.querySelectorAll("[data-pepitas-need]").forEach(span => {
+      // update pepitas
+      document.querySelectorAll("[data-pepitas-need]").forEach(span=>{
         const mat = span.getAttribute("data-pepitas-need");
         span.textContent = formatNumber(pepitasNeed[mat] || 0);
       });
 
-      document.querySelectorAll("[data-bars-need]").forEach(span => {
+      // update barras
+      document.querySelectorAll("[data-bars-need]").forEach(span=>{
         const mat = span.getAttribute("data-bars-need");
         span.textContent = formatNumber(barsNeed[mat] || 0);
       });
 
-      // o que já tens (pepitas / barras)
+      // tens pepitas / barras
       const pepitasHave = {};
       const barsHave = {};
-
-      materials.forEach(mat => {
-        const pepInput = document.querySelector('[data-pepitas-have-input="' + mat + '"]');
-        const barInput = document.querySelector('[data-bars-have-input="' + mat + '"]');
+      materials.forEach(mat=>{
+        const pepInput = document.querySelector('[data-pepitas-have-input="'+mat+'"]');
+        const barInput = document.querySelector('[data-bars-have-input="'+mat+'"]');
         pepitasHave[mat] = parseAmount(pepInput ? pepInput.value : "");
         barsHave[mat] = parseAmount(barInput ? barInput.value : "");
       });
 
-      // diferenças pepitas
-      document.querySelectorAll("[data-pepitas-diff]").forEach(span => {
+      // diff pepitas
+      document.querySelectorAll("[data-pepitas-diff]").forEach(span=>{
         const mat = span.getAttribute("data-pepitas-diff");
         const diff = (pepitasHave[mat] || 0) - (pepitasNeed[mat] || 0);
+
         span.textContent = formatNumber(diff);
-        span.classList.remove("negative", "positive");
-        if (diff < 0) span.classList.add("negative");
-        if (diff > 0) span.classList.add("positive");
+        span.classList.remove("negative","positive");
+        if(diff < 0) span.classList.add("negative");
+        if(diff > 0) span.classList.add("positive");
       });
 
-      // diferenças barras
-      document.querySelectorAll("[data-bars-diff]").forEach(span => {
+      // diff barras
+      document.querySelectorAll("[data-bars-diff]").forEach(span=>{
         const mat = span.getAttribute("data-bars-diff");
         const diff = (barsHave[mat] || 0) - (barsNeed[mat] || 0);
+
         span.textContent = formatNumber(diff);
-        span.classList.remove("negative", "positive");
-        if (diff < 0) span.classList.add("negative");
-        if (diff > 0) span.classList.add("positive");
+        span.classList.remove("negative","positive");
+        if(diff < 0) span.classList.add("negative");
+        if(diff > 0) span.classList.add("positive");
       });
 
-      // TOTAIS só minérios (Ferro/Prata/Cobre/Ouro/Aluminio)
+      // totais (só minérios)
       let needOres = 0;
       let haveOres = 0;
-
-      ORE_MATS.forEach(mat => {
+      ORE_MATS.forEach(mat=>{
         needOres += (barsNeed[mat] || 0);
         haveOres += (barsHave[mat] || 0);
       });
 
       const diffOres = haveOres - needOres;
-      const missingOres = Math.max(0, needOres - haveOres); // só o que falta
+      const missingOres = Math.max(0, needOres - haveOres);
 
       const needSpan = document.getElementById("bars-total-need-ores");
-      if (needSpan) needSpan.textContent = formatNumber(needOres);
-
-      const haveSpan = document.getElementById("bars-total-have-ores");
-      if (haveSpan) haveSpan.textContent = formatNumber(haveOres);
+      if(needSpan) needSpan.textContent = formatNumber(needOres);
 
       const diffSpan = document.getElementById("bars-total-diff-ores");
-      if (diffSpan) {
+      if(diffSpan){
         diffSpan.textContent = formatNumber(diffOres);
-        diffSpan.classList.remove("negative", "positive");
-        if (diffOres < 0) diffSpan.classList.add("negative");
-        if (diffOres > 0) diffSpan.classList.add("positive");
+        diffSpan.classList.remove("negative","positive");
+        if(diffOres < 0) diffSpan.classList.add("negative");
+        if(diffOres > 0) diffSpan.classList.add("positive");
       }
 
-      // Mostrar barras em falta e total € (só minérios)
+      // barras em falta + total €
       const missingSpan = document.getElementById("bars-missing-ores");
-      if (missingSpan) missingSpan.textContent = formatNumber(missingOres);
+      if(missingSpan) missingSpan.textContent = formatNumber(missingOres);
 
       const barPrice = parseFloat((document.getElementById("bar-price")?.value || "0").replace(",", "."));
       const priceOk = isNaN(barPrice) ? 0 : barPrice;
 
       const totalEurMissing = missingOres * priceOk;
       const eurSpan = document.getElementById("bars-total-eur");
-      if (eurSpan) eurSpan.textContent = formatNumber(totalEurMissing);
+      if(eurSpan) eurSpan.textContent = formatNumber(totalEurMissing);
     }
 
-    document.querySelectorAll(".input.green").forEach(input => {
+    // recalcular em todos inputs verdes
+    document.querySelectorAll(".input.green").forEach(input=>{
       input.addEventListener("input", recalc);
     });
 
