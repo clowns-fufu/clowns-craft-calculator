@@ -323,31 +323,35 @@
           <tbody id="refined-body"></tbody>
           <tfoot>
             <tr>
-              <td colspan="3">Total barras (só minérios)</td>
-              <td><span class="result-number" id="bars-total-ores">0</span></td>
+              <td colspan="3">Total barras necessárias (só minérios)</td>
+              <td><span class="result-number" id="bars-total-need-ores">0</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">Total barras que tens (só minérios)</td>
+              <td><span class="result-number" id="bars-total-have-ores">0</span></td>
+            </tr>
+            <tr>
+              <td colspan="3">Total falta / sobra (só minérios)</td>
+              <td><span class="result-number" id="bars-total-diff-ores">0</span></td>
             </tr>
           </tfoot>
         </table>
 
-        <p class="small" style="margin-top:10px">
-          Totais só de minérios: Ferro, Prata, Cobre, Ouro, Aluminio.
-        </p>
-
         <p class="section-label">Somar valor por barra</p>
-        <p class="small">Mete o preço por barra (€/barra) e a calculadora faz o total em €.</p>
+        <p class="small">Preço por barra (€/barra) e calcula o valor do que falta (só minérios).</p>
 
         <table class="table">
           <thead>
             <tr>
               <th>Preço €/barra</th>
-              <th>Total barras</th>
+              <th>Barras em falta</th>
               <th>Total €</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="bar-price" /></td>
-              <td><span class="result-number" id="bars-total-ores-2">0</span></td>
+              <td><span class="result-number" id="bars-missing-ores">0</span></td>
               <td><span class="result-number" id="bars-total-eur">0</span></td>
             </tr>
           </tbody>
@@ -395,6 +399,7 @@
     const materials = ["Carvao", "Ferro", "Prata", "Cobre", "Ouro", "Aluminio", "Borracha", "Tecido"];
     const parts = ["Ferro", "Gatilho", "Mola", "Engrenagem", "Cano", "Corp"];
 
+    // SÓ os minérios que queres somar
     const ORE_MATS = ["Ferro", "Prata", "Cobre", "Ouro", "Aluminio"];
 
     const materialPerPart = {
@@ -644,25 +649,6 @@
         span.textContent = formatNumber(barsNeed[mat] || 0);
       });
 
-      // total barras SÓ dos minérios: Ferro, Prata, Cobre, Ouro, Aluminio
-      let barsTotalOres = 0;
-      ORE_MATS.forEach(mat => {
-        barsTotalOres += (barsNeed[mat] || 0);
-      });
-
-      const barsTotalOresSpan = document.getElementById("bars-total-ores");
-      if (barsTotalOresSpan) barsTotalOresSpan.textContent = formatNumber(barsTotalOres);
-
-      const barsTotalOresSpan2 = document.getElementById("bars-total-ores-2");
-      if (barsTotalOresSpan2) barsTotalOresSpan2.textContent = formatNumber(barsTotalOres);
-
-      // total € = total barras (minérios) * preço por barra
-      const barPrice = parseFloat((document.getElementById("bar-price")?.value || "0").replace(",", "."));
-      const barsTotalEur = (isNaN(barPrice) ? 0 : barPrice) * barsTotalOres;
-
-      const barsTotalEurSpan = document.getElementById("bars-total-eur");
-      if (barsTotalEurSpan) barsTotalEurSpan.textContent = formatNumber(barsTotalEur);
-
       // o que já tens (pepitas / barras)
       const pepitasHave = {};
       const barsHave = {};
@@ -674,6 +660,7 @@
         barsHave[mat] = parseAmount(barInput ? barInput.value : "");
       });
 
+      // diferenças pepitas
       document.querySelectorAll("[data-pepitas-diff]").forEach(span => {
         const mat = span.getAttribute("data-pepitas-diff");
         const diff = (pepitasHave[mat] || 0) - (pepitasNeed[mat] || 0);
@@ -683,6 +670,7 @@
         if (diff > 0) span.classList.add("positive");
       });
 
+      // diferenças barras
       document.querySelectorAll("[data-bars-diff]").forEach(span => {
         const mat = span.getAttribute("data-bars-diff");
         const diff = (barsHave[mat] || 0) - (barsNeed[mat] || 0);
@@ -691,6 +679,43 @@
         if (diff < 0) span.classList.add("negative");
         if (diff > 0) span.classList.add("positive");
       });
+
+      // TOTAIS só minérios (Ferro/Prata/Cobre/Ouro/Aluminio)
+      let needOres = 0;
+      let haveOres = 0;
+
+      ORE_MATS.forEach(mat => {
+        needOres += (barsNeed[mat] || 0);
+        haveOres += (barsHave[mat] || 0);
+      });
+
+      const diffOres = haveOres - needOres;
+      const missingOres = Math.max(0, needOres - haveOres); // só o que falta
+
+      const needSpan = document.getElementById("bars-total-need-ores");
+      if (needSpan) needSpan.textContent = formatNumber(needOres);
+
+      const haveSpan = document.getElementById("bars-total-have-ores");
+      if (haveSpan) haveSpan.textContent = formatNumber(haveOres);
+
+      const diffSpan = document.getElementById("bars-total-diff-ores");
+      if (diffSpan) {
+        diffSpan.textContent = formatNumber(diffOres);
+        diffSpan.classList.remove("negative", "positive");
+        if (diffOres < 0) diffSpan.classList.add("negative");
+        if (diffOres > 0) diffSpan.classList.add("positive");
+      }
+
+      // Mostrar barras em falta e total € (só minérios)
+      const missingSpan = document.getElementById("bars-missing-ores");
+      if (missingSpan) missingSpan.textContent = formatNumber(missingOres);
+
+      const barPrice = parseFloat((document.getElementById("bar-price")?.value || "0").replace(",", "."));
+      const priceOk = isNaN(barPrice) ? 0 : barPrice;
+
+      const totalEurMissing = missingOres * priceOk;
+      const eurSpan = document.getElementById("bars-total-eur");
+      if (eurSpan) eurSpan.textContent = formatNumber(totalEurMissing);
     }
 
     document.querySelectorAll(".input.green").forEach(input => {
