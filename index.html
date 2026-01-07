@@ -242,12 +242,13 @@
         <br><br>
 
         <p class="section-label">Peças extra para craftar</p>
-        <p class="small">Aqui podes meter peças que vais craftar separadas das armas (ex: só engrenagens).</p>
+        <p class="small">Aqui metes o número de crafts por peça. Cada craft dá 3 peças.</p>
         <table class="table">
           <thead>
             <tr>
               <th>Peça</th>
-              <th>Quantidade extra</th>
+              <th>Nº crafts (3 peças/craft)</th>
+              <th class="small">Total recebido</th>
             </tr>
           </thead>
           <tbody id="manual-parts-body"></tbody>
@@ -336,14 +337,19 @@
         </thead>
         <tbody>
           <tr>
-            <td>Colete Avançado</td>
-            <td><input class="input green" type="number" min="0" value="0" id="q-colete"></td>
+            <td>Colete Avançado (craft)</td>
+            <td>
+              <input class="input green" type="number" min="0" value="0" id="q-colete">
+              <div class="small" style="margin-top:6px">
+                Recebes: <span class="result-number" id="colete-received">0</span> coletes (20 por craft)
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <p class="small" style="margin-top:8px">
-        Ingredientes por colete: Ferro refinado 15, Alumínio refinado 15, Tecido 20
+        1 craft = 20 coletes. Ingredientes por colete: Ferro refinado 15, Alumínio refinado 15, Tecido 20
       </p>
     </section>
 
@@ -432,11 +438,12 @@
         partsBody.appendChild(tr);
       });
 
-      // peças extra
+      // peças extra (inputs = crafts) + mostrar recebido
       parts.forEach(part=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdInput = document.createElement("td");
+        const tdReceived = document.createElement("td");
 
         tdName.textContent = part;
 
@@ -448,8 +455,12 @@
         input.id = "extra-"+part;
 
         tdInput.appendChild(input);
+
+        tdReceived.innerHTML = '<span class="result-number" data-extra-received="'+part+'">0</span>';
+
         tr.appendChild(tdName);
         tr.appendChild(tdInput);
+        tr.appendChild(tdReceived);
         manualPartsBody.appendChild(tr);
       });
 
@@ -533,11 +544,16 @@
       const weaponsTotalSpan = document.getElementById("weapons-total");
       if(weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
 
-      // peças extra
+      // peças extra (1 craft = 3 peças)
       const extraParts = {};
       parts.forEach(p=>{
         const input = document.getElementById("extra-"+p);
-        extraParts[p] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
+        const crafts = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
+        const received = crafts * 3;
+        extraParts[p] = received;
+
+        const receivedSpan = document.querySelector('[data-extra-received="'+p+'"]');
+        if(receivedSpan) receivedSpan.textContent = formatNumber(received);
       });
 
       // total peças = armas + extra
@@ -598,17 +614,21 @@
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
-      // colete
-      const coleteQty = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
-      if(coleteQty > 0){
-        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coleteQty * 15;
-        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coleteQty * 15;
+      // colete (1 craft = 20 coletes)
+      const coleteCrafts = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
+      const coletesReceived = coleteCrafts * 20;
 
-        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coleteQty * 20;
+      const coleteSpan = document.getElementById("colete-received");
+      if(coleteSpan) coleteSpan.textContent = formatNumber(coletesReceived);
 
-        pepitasNeed["Ferro"] += coleteQty * 15 * 10;
-        pepitasNeed["Aluminio"] += coleteQty * 15 * 10;
-        pepitasNeed["Tecido"] += coleteQty * 20;
+      if(coletesReceived > 0){
+        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coletesReceived * 15;
+        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coletesReceived * 15;
+        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coletesReceived * 20;
+
+        pepitasNeed["Ferro"] += coletesReceived * 15 * 10;
+        pepitasNeed["Aluminio"] += coletesReceived * 15 * 10;
+        pepitasNeed["Tecido"] += coletesReceived * 20;
       }
 
       // update pepitas
@@ -700,6 +720,3 @@
   <p>Made by Donald Trump</p>
 </body>
 </html>
-
-
-
