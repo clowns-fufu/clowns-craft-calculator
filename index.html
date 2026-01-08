@@ -378,10 +378,21 @@
       Corp:       { Carvao:10, Ferro:40, Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
+    // IMPORTANTE:
+    // Estes valores agora são interpretados como "peças por craft" (porque 1 craft = 3 armas).
     const weaponParts = {
       "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
       "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
     };
+
+    // DROPS
+    const WEAPON_CRAFT_YIELD = 3;   // 1 craft = 3 armas
+    const COLETE_CRAFT_YIELD = 20;  // 1 craft = 20 coletes
+
+    function craftsForWeapons(qty){
+      qty = Math.max(0, parseInt(qty || "0", 10));
+      return qty <= 0 ? 0 : Math.ceil(qty / WEAPON_CRAFT_YIELD);
+    }
 
     function pepitasToBars(material, pepitas){
       if(material==="Carvao" || material==="Borracha" || material==="Tecido") return pepitas;
@@ -438,7 +449,7 @@
         partsBody.appendChild(tr);
       });
 
-      // peças extra (inputs = crafts) + mostrar recebido
+      // peças extra (inputs = crafts) + mostrar recebido (3 por craft)
       parts.forEach(part=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
@@ -455,7 +466,6 @@
         input.id = "extra-"+part;
 
         tdInput.appendChild(input);
-
         tdReceived.innerHTML = '<span class="result-number" data-extra-received="'+part+'">0</span>';
 
         tr.appendChild(tdName);
@@ -527,7 +537,7 @@
         weaponCounts[name] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
-      // preços
+      // preços (continua por arma)
       let weaponsTotal = 0;
       Object.keys(weaponParts).forEach(name=>{
         const priceInput = document.getElementById("price-"+name);
@@ -560,10 +570,13 @@
       const totalParts = {};
       parts.forEach(p=> totalParts[p] = extraParts[p] || 0);
 
-      Object.entries(weaponParts).forEach(([weapon, partsNeeded])=>{
-        const q = weaponCounts[weapon] || 0;
-        Object.entries(partsNeeded).forEach(([partName, qtyPerWeapon])=>{
-          totalParts[partName] += q * qtyPerWeapon;
+      // Agora calcula peças por CRAFT de arma (porque 1 craft = 3 armas)
+      Object.entries(weaponParts).forEach(([weapon, partsNeededPerCraft])=>{
+        const qtyWanted = weaponCounts[weapon] || 0;
+        const crafts = craftsForWeapons(qtyWanted);
+
+        Object.entries(partsNeededPerCraft).forEach(([partName, qtyPerCraft])=>{
+          totalParts[partName] += crafts * qtyPerCraft;
         });
       });
 
@@ -616,16 +629,18 @@
 
       // colete (1 craft = 20 coletes)
       const coleteCrafts = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
-      const coletesReceived = coleteCrafts * 20;
+      const coletesReceived = coleteCrafts * COLETE_CRAFT_YIELD;
 
       const coleteSpan = document.getElementById("colete-received");
       if(coleteSpan) coleteSpan.textContent = formatNumber(coletesReceived);
 
       if(coletesReceived > 0){
+        // ingredientes por colete
         barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coletesReceived * 15;
         barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coletesReceived * 15;
         barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coletesReceived * 20;
 
+        // pepitas equivalentes (minérios *10, tecido mantém)
         pepitasNeed["Ferro"] += coletesReceived * 15 * 10;
         pepitasNeed["Aluminio"] += coletesReceived * 15 * 10;
         pepitasNeed["Tecido"] += coletesReceived * 20;
