@@ -190,7 +190,7 @@
       <!-- LADO ESQUERDO -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
-        <p>Escreve quantas <strong>Scar-SC, G36</strong> vais craftar ou vender e, se quiseres, o preço por arma.</p>
+        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres e, se quiseres, o preço por arma.</p>
 
         <table class="table">
           <thead>
@@ -219,6 +219,41 @@
             <tr>
               <td colspan="3">Total armas (€)</td>
               <td><span class="result-number" id="weapons-total">0</span></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- NOVA ABA/SECÇÃO: crafts necessários -->
+        <p class="section-label">Crafts necessários (1 craft = 3 armas)</p>
+        <p class="small">Isto serve para dizer à malta: “faz X crafts para receber Y armas”.</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Arma</th>
+              <th>Queres</th>
+              <th>Crafts</th>
+              <th>Recebes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Scar-SC</td>
+              <td><span class="result-number" data-weapon-want="Scar-SC">0</span></td>
+              <td><span class="result-number" data-weapon-crafts="Scar-SC">0</span></td>
+              <td><span class="result-number" data-weapon-received="Scar-SC">0</span></td>
+            </tr>
+            <tr>
+              <td>G36</td>
+              <td><span class="result-number" data-weapon-want="G36">0</span></td>
+              <td><span class="result-number" data-weapon-crafts="G36">0</span></td>
+              <td><span class="result-number" data-weapon-received="G36">0</span></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2">Total crafts</td>
+              <td><span class="result-number" id="weapons-total-crafts">0</span></td>
+              <td><span class="result-number" id="weapons-total-received">0</span></td>
             </tr>
           </tfoot>
         </table>
@@ -371,15 +406,14 @@
 
     const materialPerPart = {
       Ferro:      { Carvao:10, Ferro:20,  Prata:40, Cobre:20, Ouro:0,  Aluminio:0,  Borracha:0, Tecido:0 },
-      Gatilho:    { Carvao:10, Ferro:0,  Prata:0,  Cobre:0,  Ouro:80, Aluminio:0,  Borracha:0, Tecido:0 },
-      Mola:       { Carvao:10, Ferro:0,  Prata:40, Cobre:0,  Ouro:40, Aluminio:0,  Borracha:2, Tecido:0 },
-      Engrenagem: { Carvao:10, Ferro:0,  Prata:0,  Cobre:40, Ouro:0,  Aluminio:40, Borracha:2, Tecido:0 },
-      Cano:       { Carvao:10, Ferro:20, Prata:20, Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 },
-      Corp:       { Carvao:10, Ferro:40, Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
+      Gatilho:    { Carvao:10, Ferro:0,   Prata:0,  Cobre:0,  Ouro:80, Aluminio:0,  Borracha:0, Tecido:0 },
+      Mola:       { Carvao:10, Ferro:0,   Prata:40, Cobre:0,  Ouro:40, Aluminio:0,  Borracha:2, Tecido:0 },
+      Engrenagem: { Carvao:10, Ferro:0,   Prata:0,  Cobre:40, Ouro:0,  Aluminio:40, Borracha:2, Tecido:0 },
+      Cano:       { Carvao:10, Ferro:20,  Prata:20, Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 },
+      Corp:       { Carvao:10, Ferro:40,  Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
-    // IMPORTANTE:
-    // Estes valores agora são interpretados como "peças por craft" (porque 1 craft = 3 armas).
+    // Estes valores são interpretados como "peças por craft" (porque 1 craft = 3 armas).
     const weaponParts = {
       "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
       "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
@@ -537,7 +571,7 @@
         weaponCounts[name] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
-      // preços (continua por arma)
+      // preços (por arma)
       let weaponsTotal = 0;
       Object.keys(weaponParts).forEach(name=>{
         const priceInput = document.getElementById("price-"+name);
@@ -553,6 +587,32 @@
 
       const weaponsTotalSpan = document.getElementById("weapons-total");
       if(weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
+
+      // NOVA ABA: crafts necessários para armas
+      let totalCraftsAll = 0;
+      let totalReceivedAll = 0;
+
+      Object.keys(weaponParts).forEach(name=>{
+        const want = weaponCounts[name] || 0;
+        const crafts = craftsForWeapons(want);
+        const received = crafts * WEAPON_CRAFT_YIELD;
+
+        totalCraftsAll += crafts;
+        totalReceivedAll += received;
+
+        const wantSpan = document.querySelector('[data-weapon-want="'+name+'"]');
+        const craftsSpan = document.querySelector('[data-weapon-crafts="'+name+'"]');
+        const receivedSpan = document.querySelector('[data-weapon-received="'+name+'"]');
+
+        if(wantSpan) wantSpan.textContent = formatNumber(want);
+        if(craftsSpan) craftsSpan.textContent = formatNumber(crafts);
+        if(receivedSpan) receivedSpan.textContent = formatNumber(received);
+      });
+
+      const totalCraftsSpan = document.getElementById("weapons-total-crafts");
+      const totalReceivedSpan = document.getElementById("weapons-total-received");
+      if(totalCraftsSpan) totalCraftsSpan.textContent = formatNumber(totalCraftsAll);
+      if(totalReceivedSpan) totalReceivedSpan.textContent = formatNumber(totalReceivedAll);
 
       // peças extra (1 craft = 3 peças)
       const extraParts = {};
@@ -570,7 +630,7 @@
       const totalParts = {};
       parts.forEach(p=> totalParts[p] = extraParts[p] || 0);
 
-      // Agora calcula peças por CRAFT de arma (porque 1 craft = 3 armas)
+      // peças por CRAFT de arma (porque 1 craft = 3 armas)
       Object.entries(weaponParts).forEach(([weapon, partsNeededPerCraft])=>{
         const qtyWanted = weaponCounts[weapon] || 0;
         const crafts = craftsForWeapons(qtyWanted);
