@@ -160,7 +160,7 @@
       text-transform:uppercase;
       letter-spacing:.22em;
       color:var(--accent);
-      margin:18px 0 8px;
+      margin:32px 0 14px; /* MAIS ESPAÇO ENTRE ABAS */
       padding-top:6px;
       border-top:2px solid rgba(148,163,184,.45);
     }
@@ -190,7 +190,7 @@
       <!-- LADO ESQUERDO -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
-        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres. O cálculo de peças assume: 1 craft = 3 armas.</p>
+        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres. Só dá para meter múltiplos de 3 (3/6/9/...).</p>
 
         <table class="table">
           <thead>
@@ -204,13 +204,13 @@
           <tbody>
             <tr>
               <td>Scar-SC</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC"></td>
+              <td><input class="input green" type="number" min="0" step="3" value="0" id="q-Scar-SC"></td>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar-SC"></td>
               <td><span class="result-number" data-weapon-total="Scar-SC">0</span></td>
             </tr>
             <tr>
               <td>G36</td>
-              <td><input class="input green" type="number" min="0" value="0" id="q-G36"></td>
+              <td><input class="input green" type="number" min="0" step="3" value="0" id="q-G36"></td>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-G36"></td>
               <td><span class="result-number" data-weapon-total="G36">0</span></td>
             </tr>
@@ -237,7 +237,6 @@
           <tbody id="parts-body"></tbody>
         </table>
 
-        <!-- NOVA ABA: crafts para cobrir a falta de peças -->
         <p class="section-label">Crafts para cobrir a falta (1 craft = 3 peças)</p>
         <p class="small">Com base no que falta, diz quantos crafts tens de fazer por peça (arredonda para cima).</p>
         <table class="table">
@@ -251,13 +250,7 @@
             </tr>
           </thead>
           <tbody id="parts-craft-body"></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2">Total crafts (todas as peças)</td>
-              <td><span class="result-number" id="parts-craft-total">0</span></td>
-              <td colspan="2"></td>
-            </tr>
-          </tfoot>
+          <!-- REMOVIDO: Total crafts (todas as peças) -->
         </table>
 
         <p class="section-label">Peças extra para craftar</p>
@@ -392,8 +385,7 @@
       Corp:       { Carvao:10, Ferro:40,  Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
-    // IMPORTANTE:
-    // Estes valores agora são interpretados como "peças por craft" (porque 1 craft = 3 armas).
+    // valores interpretados como "peças por craft" (1 craft = 3 armas)
     const weaponParts = {
       "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
       "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
@@ -653,15 +645,12 @@
         missingParts[partName] = Math.max(0, totalNeed - have);
       });
 
-      // NOVA ABA: crafts recomendados para cobrir a falta
-      let totalPartCrafts = 0;
+      // crafts recomendados para cobrir a falta
       parts.forEach(partName=>{
         const missing = missingParts[partName] || 0;
         const crafts = missing > 0 ? Math.ceil(missing / PART_CRAFT_YIELD) : 0;
         const received = crafts * PART_CRAFT_YIELD;
         const leftover = received - missing;
-
-        totalPartCrafts += crafts;
 
         const sMissing = document.querySelector('[data-part-missing="'+partName+'"]');
         const sCrafts = document.querySelector('[data-part-crafts="'+partName+'"]');
@@ -673,9 +662,6 @@
         if(sReceived) sReceived.textContent = formatNumber(received);
         if(sLeftover) sLeftover.textContent = formatNumber(leftover);
       });
-
-      const totalCraftSpan = document.getElementById("parts-craft-total");
-      if(totalCraftSpan) totalCraftSpan.textContent = formatNumber(totalPartCrafts);
 
       // pepitas (a partir das peças EM FALTA)
       const pepitasNeed = {};
