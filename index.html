@@ -14,6 +14,7 @@
   <meta charset="UTF-8" />
   <title>Madrazo – Craft Calculadora</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     :root{
       --bg:#05060a;
@@ -160,7 +161,7 @@
       text-transform:uppercase;
       letter-spacing:.22em;
       color:var(--accent);
-      margin:32px 0 14px; /* MAIS ESPAÇO ENTRE ABAS */
+      margin:18px 0 8px;
       padding-top:6px;
       border-top:2px solid rgba(148,163,184,.45);
     }
@@ -176,6 +177,7 @@
     .footer-note strong{color:var(--accent);font-weight:500;}
   </style>
 </head>
+
 <body>
   <div class="app">
     <header class="header">
@@ -190,7 +192,7 @@
       <!-- LADO ESQUERDO -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
-        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres. Só dá para meter múltiplos de 3 (3/6/9/...).</p>
+        <p>Escreve quantas <strong>Scar-SC, G36</strong> vais craftar ou vender e, se quiseres, o preço por arma.</p>
 
         <table class="table">
           <thead>
@@ -204,13 +206,13 @@
           <tbody>
             <tr>
               <td>Scar-SC</td>
-              <td><input class="input green" type="number" min="0" step="3" value="0" id="q-Scar-SC"></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-Scar-SC"></td>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-Scar-SC"></td>
               <td><span class="result-number" data-weapon-total="Scar-SC">0</span></td>
             </tr>
             <tr>
               <td>G36</td>
-              <td><input class="input green" type="number" min="0" step="3" value="0" id="q-G36"></td>
+              <td><input class="input green" type="number" min="0" value="0" id="q-G36"></td>
               <td><input class="input green" type="number" min="0" step="0.01" value="0" id="price-G36"></td>
               <td><span class="result-number" data-weapon-total="G36">0</span></td>
             </tr>
@@ -223,13 +225,20 @@
           </tfoot>
         </table>
 
+        <br><br>
+
         <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
-        <p class="small">Na coluna "Tens" podes escrever tipo 2+3 para somar.</p>
+        <p class="small">
+          Na coluna "Tens" podes escrever tipo 2+3 para somar.
+          O cálculo dos materiais usa crafts: <strong>1 craft = <span id="parts-per-craft-label">3</span> peças</strong>.
+        </p>
+
         <table class="table">
           <thead>
             <tr>
               <th>Peça</th>
-              <th>Total</th>
+              <th>Total (peças)</th>
+              <th>Crafts (se faltar)</th>
               <th class="small">Tens</th>
               <th>Falta / sobra</th>
             </tr>
@@ -237,30 +246,17 @@
           <tbody id="parts-body"></tbody>
         </table>
 
-        <p class="section-label">Crafts para cobrir a falta (1 craft = 3 peças)</p>
-        <p class="small">Com base no que falta, diz quantos crafts tens de fazer por peça (arredonda para cima).</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Peça</th>
-              <th>Falta</th>
-              <th>Crafts</th>
-              <th>Recebes</th>
-              <th>Sobra</th>
-            </tr>
-          </thead>
-          <tbody id="parts-craft-body"></tbody>
-          <!-- REMOVIDO: Total crafts (todas as peças) -->
-        </table>
+        <br><br>
 
         <p class="section-label">Peças extra para craftar</p>
-        <p class="small">Aqui metes o número de crafts por peça. Cada craft dá 3 peças.</p>
+        <p class="small">
+          Aqui podes meter peças que vais craftar separadas das armas (quantidade em peças).
+        </p>
         <table class="table">
           <thead>
             <tr>
               <th>Peça</th>
-              <th>Nº crafts (3 peças/craft)</th>
-              <th class="small">Total recebido</th>
+              <th>Quantidade extra (peças)</th>
             </tr>
           </thead>
           <tbody id="manual-parts-body"></tbody>
@@ -271,6 +267,8 @@
       <section class="card">
         <h2><span>2.</span> Materiais da mina</h2>
         <p>Só podes escrever nas caixas a <strong>verde</strong>.</p>
+
+        <br>
 
         <p class="section-label">Pepitas necessárias</p>
         <table class="table">
@@ -284,6 +282,8 @@
           </thead>
           <tbody id="pepitas-body"></tbody>
         </table>
+
+        <br><br>
 
         <p class="section-label">Refinado necessárias (barras)</p>
         <table class="table">
@@ -344,38 +344,37 @@
         </thead>
         <tbody>
           <tr>
-            <td>Colete Avançado (craft)</td>
-            <td>
-              <input class="input green" type="number" min="0" value="0" id="q-colete">
-              <div class="small" style="margin-top:6px">
-                Recebes: <span class="result-number" id="colete-received">0</span> coletes (20 por craft)
-              </div>
-            </td>
+            <td>Colete Avançado</td>
+            <td><input class="input green" type="number" min="0" value="0" id="q-colete"></td>
           </tr>
         </tbody>
       </table>
 
       <p class="small" style="margin-top:8px">
-        1 craft = 20 coletes. Ingredientes por colete: Ferro refinado 15, Alumínio refinado 15, Tecido 20
+        Ingredientes por colete: Ferro refinado 15, Alumínio refinado 15, Tecido 20
       </p>
     </section>
 
     <div class="footer-note">
       <span>
         Só podes escrever nas caixas a <strong>verde</strong>. Se tiveres por exemplo uma carrinha com
-        50 cobre e outra com 68 cobre, não precisas de fazer as contas – escreve
-        <strong>50+68</strong> e a calculadora soma por ti.
+        50 cobre e outra com 68 cobre, escreve <strong>50+68</strong> e a calculadora soma por ti.
       </span>
+      <span class="small">Made by Donald Trump</span>
     </div>
   </div>
 
   <script>
+    // CONFIG: quantas peças saem por 1 craft
+    const PARTS_PER_CRAFT = 3;
+
     const materials = ["Carvao","Ferro","Prata","Cobre","Ouro","Aluminio","Borracha","Tecido"];
     const parts = ["Ferro","Gatilho","Mola","Engrenagem","Cano","Corp"];
 
-    // SÓ os minérios para totais
+    // Só os minérios para totais
     const ORE_MATS = ["Ferro","Prata","Cobre","Ouro","Aluminio"];
 
+    // Materiais por CRAFT (não por peça)
     const materialPerPart = {
       Ferro:      { Carvao:10, Ferro:20,  Prata:40, Cobre:20, Ouro:0,  Aluminio:0,  Borracha:0, Tecido:0 },
       Gatilho:    { Carvao:10, Ferro:0,   Prata:0,  Cobre:0,  Ouro:80, Aluminio:0,  Borracha:0, Tecido:0 },
@@ -385,21 +384,10 @@
       Corp:       { Carvao:10, Ferro:40,  Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
-    // valores interpretados como "peças por craft" (1 craft = 3 armas)
     const weaponParts = {
       "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
-      "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
+      "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 }
     };
-
-    // DROPS
-    const WEAPON_CRAFT_YIELD = 3;   // 1 craft = 3 armas
-    const PART_CRAFT_YIELD   = 3;   // 1 craft = 3 peças
-    const COLETE_CRAFT_YIELD = 20;  // 1 craft = 20 coletes
-
-    function craftsForWeapons(qty){
-      qty = Math.max(0, parseInt(qty || "0", 10));
-      return qty <= 0 ? 0 : Math.ceil(qty / WEAPON_CRAFT_YIELD);
-    }
 
     function pepitasToBars(material, pepitas){
       if(material==="Carvao" || material==="Borracha" || material==="Tecido") return pepitas;
@@ -424,13 +412,16 @@
     }
 
     const partsBody = document.getElementById("parts-body");
-    const partsCraftBody = document.getElementById("parts-craft-body");
     const manualPartsBody = document.getElementById("manual-parts-body");
     const pepitasBody = document.getElementById("pepitas-body");
     const refinedBody = document.getElementById("refined-body");
 
+    // label "1 craft = X peças"
+    const ppcLabel = document.getElementById("parts-per-craft-label");
+    if(ppcLabel) ppcLabel.textContent = String(PARTS_PER_CRAFT);
+
     function buildStaticRows(){
-      // peças totais + tens + diff
+      // Peças (com coluna crafts)
       parts.forEach(part=>{
         const tr = document.createElement("tr");
 
@@ -439,6 +430,9 @@
 
         const tdTotal = document.createElement("td");
         tdTotal.innerHTML = '<span class="result-number" data-part="'+part+'">0</span>';
+
+        const tdCrafts = document.createElement("td");
+        tdCrafts.innerHTML = '<span class="result-number" data-part-crafts="'+part+'">0</span>';
 
         const tdHave = document.createElement("td");
         const inputHave = document.createElement("input");
@@ -452,45 +446,17 @@
 
         tr.appendChild(tdName);
         tr.appendChild(tdTotal);
+        tr.appendChild(tdCrafts);
         tr.appendChild(tdHave);
         tr.appendChild(tdDiff);
         partsBody.appendChild(tr);
       });
 
-      // crafts para cobrir a falta (linhas)
-      parts.forEach(part=>{
-        const tr = document.createElement("tr");
-
-        const tdName = document.createElement("td");
-        tdName.textContent = part;
-
-        const tdMissing = document.createElement("td");
-        tdMissing.innerHTML = '<span class="result-number" data-part-missing="'+part+'">0</span>';
-
-        const tdCrafts = document.createElement("td");
-        tdCrafts.innerHTML = '<span class="result-number" data-part-crafts="'+part+'">0</span>';
-
-        const tdReceived = document.createElement("td");
-        tdReceived.innerHTML = '<span class="result-number" data-part-crafts-received="'+part+'">0</span>';
-
-        const tdLeftover = document.createElement("td");
-        tdLeftover.innerHTML = '<span class="result-number" data-part-crafts-leftover="'+part+'">0</span>';
-
-        tr.appendChild(tdName);
-        tr.appendChild(tdMissing);
-        tr.appendChild(tdCrafts);
-        tr.appendChild(tdReceived);
-        tr.appendChild(tdLeftover);
-
-        partsCraftBody.appendChild(tr);
-      });
-
-      // peças extra (inputs = crafts) + mostrar recebido
+      // Peças extra
       parts.forEach(part=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdInput = document.createElement("td");
-        const tdReceived = document.createElement("td");
 
         tdName.textContent = part;
 
@@ -502,15 +468,12 @@
         input.id = "extra-"+part;
 
         tdInput.appendChild(input);
-        tdReceived.innerHTML = '<span class="result-number" data-extra-received="'+part+'">0</span>';
-
         tr.appendChild(tdName);
         tr.appendChild(tdInput);
-        tr.appendChild(tdReceived);
         manualPartsBody.appendChild(tr);
       });
 
-      // pepitas
+      // Pepitas
       materials.forEach(mat=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
@@ -536,7 +499,7 @@
         pepitasBody.appendChild(tr);
       });
 
-      // barras
+      // Barras
       materials.forEach(mat=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
@@ -566,14 +529,14 @@
     buildStaticRows();
 
     function recalc(){
-      // armas (quantidade desejada)
+      // Armas
       const weaponCounts = {};
       Object.keys(weaponParts).forEach(name=>{
         const input = document.getElementById("q-"+name);
         weaponCounts[name] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
-      // preços (por arma)
+      // Preços
       let weaponsTotal = 0;
       Object.keys(weaponParts).forEach(name=>{
         const priceInput = document.getElementById("price-"+name);
@@ -590,130 +553,102 @@
       const weaponsTotalSpan = document.getElementById("weapons-total");
       if(weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
 
-      // peças extra (inputs = crafts, 1 craft = 3 peças)
+      // Peças extra (em peças)
       const extraParts = {};
       parts.forEach(p=>{
         const input = document.getElementById("extra-"+p);
-        const crafts = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
-        const received = crafts * PART_CRAFT_YIELD;
-        extraParts[p] = received;
-
-        const receivedSpan = document.querySelector('[data-extra-received="'+p+'"]');
-        if(receivedSpan) receivedSpan.textContent = formatNumber(received);
+        extraParts[p] = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
       });
 
-      // total peças = armas + extra
+      // Total de peças = armas + extra
       const totalParts = {};
       parts.forEach(p=> totalParts[p] = extraParts[p] || 0);
 
-      // peças por CRAFT de arma (porque 1 craft = 3 armas)
-      Object.entries(weaponParts).forEach(([weapon, partsNeededPerCraft])=>{
-        const qtyWanted = weaponCounts[weapon] || 0;
-        const crafts = craftsForWeapons(qtyWanted);
-
-        Object.entries(partsNeededPerCraft).forEach(([partName, qtyPerCraft])=>{
-          totalParts[partName] += crafts * qtyPerCraft;
+      Object.entries(weaponParts).forEach(([weapon, partsNeeded])=>{
+        const q = weaponCounts[weapon] || 0;
+        Object.entries(partsNeeded).forEach(([partName, qtyPerWeapon])=>{
+          totalParts[partName] += q * qtyPerWeapon;
         });
       });
 
-      // update total peças
+      // Update total peças
       document.querySelectorAll("[data-part]").forEach(span=>{
         const partName = span.getAttribute("data-part");
         span.textContent = totalParts[partName] || 0;
       });
 
-      // diff peças (have - need)
-      document.querySelectorAll("[data-part-diff]").forEach(span=>{
-        const partName = span.getAttribute("data-part-diff");
-        const totalNeed = totalParts[partName] || 0;
-        const haveInput = document.querySelector('[data-part-have-input="'+partName+'"]');
-        const have = parseAmount(haveInput ? haveInput.value : "");
-        const diff = have - totalNeed;
-
-        span.textContent = formatNumber(diff);
-        span.classList.remove("negative","positive");
-        if(diff < 0) span.classList.add("negative");
-        if(diff > 0) span.classList.add("positive");
-      });
-
-      // calcular peças em falta (need - have)
+      // Diff peças (tens - totalNeed) e crafts necessários (se faltar)
       const missingParts = {};
       parts.forEach(partName=>{
         const totalNeed = totalParts[partName] || 0;
         const haveInput = document.querySelector('[data-part-have-input="'+partName+'"]');
         const have = parseAmount(haveInput ? haveInput.value : "");
-        missingParts[partName] = Math.max(0, totalNeed - have);
+        const needMissing = Math.max(0, totalNeed - have);
+        missingParts[partName] = needMissing;
+
+        // diff em peças
+        const diff = have - totalNeed;
+        const diffSpan = document.querySelector('[data-part-diff="'+partName+'"]');
+        if(diffSpan){
+          diffSpan.textContent = formatNumber(diff);
+          diffSpan.classList.remove("negative","positive");
+          if(diff < 0) diffSpan.classList.add("negative");
+          if(diff > 0) diffSpan.classList.add("positive");
+        }
+
+        // crafts (se faltar)
+        const craftsNeeded = needMissing > 0 ? Math.ceil(needMissing / PARTS_PER_CRAFT) : 0;
+        const craftSpan = document.querySelector('[data-part-crafts="'+partName+'"]');
+        if(craftSpan) craftSpan.textContent = formatNumber(craftsNeeded);
       });
 
-      // crafts recomendados para cobrir a falta
-      parts.forEach(partName=>{
-        const missing = missingParts[partName] || 0;
-        const crafts = missing > 0 ? Math.ceil(missing / PART_CRAFT_YIELD) : 0;
-        const received = crafts * PART_CRAFT_YIELD;
-        const leftover = received - missing;
-
-        const sMissing = document.querySelector('[data-part-missing="'+partName+'"]');
-        const sCrafts = document.querySelector('[data-part-crafts="'+partName+'"]');
-        const sReceived = document.querySelector('[data-part-crafts-received="'+partName+'"]');
-        const sLeftover = document.querySelector('[data-part-crafts-leftover="'+partName+'"]');
-
-        if(sMissing) sMissing.textContent = formatNumber(missing);
-        if(sCrafts) sCrafts.textContent = formatNumber(crafts);
-        if(sReceived) sReceived.textContent = formatNumber(received);
-        if(sLeftover) sLeftover.textContent = formatNumber(leftover);
-      });
-
-      // pepitas (a partir das peças EM FALTA)
+      // Pepitas necessárias (a partir dos CRAFTS em falta)
       const pepitasNeed = {};
       materials.forEach(m => pepitasNeed[m] = 0);
 
-      Object.entries(missingParts).forEach(([partName, missingQty])=>{
+      Object.entries(missingParts).forEach(([partName, missingQtyPieces])=>{
         const map = materialPerPart[partName];
         if(!map) return;
+
+        const craftsNeeded = missingQtyPieces > 0 ? Math.ceil(missingQtyPieces / PARTS_PER_CRAFT) : 0;
+
         materials.forEach(mat=>{
-          const perPiece = map[mat] || 0;
-          pepitasNeed[mat] += missingQty * perPiece;
+          const perCraft = map[mat] || 0;
+          pepitasNeed[mat] += craftsNeeded * perCraft;
         });
       });
 
-      // barras necessárias
+      // Barras necessárias
       const barsNeed = {};
       materials.forEach(mat=>{
         barsNeed[mat] = pepitasToBars(mat, pepitasNeed[mat] || 0);
       });
 
-      // colete (1 craft = 20 coletes)
-      const coleteCrafts = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
-      const coletesReceived = coleteCrafts * COLETE_CRAFT_YIELD;
+      // Colete (mantém como barras diretas)
+      const coleteQty = Math.max(0, parseInt(document.getElementById("q-colete")?.value || "0", 10));
+      if(coleteQty > 0){
+        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coleteQty * 15;
+        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coleteQty * 15;
+        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coleteQty * 20;
 
-      const coleteSpan = document.getElementById("colete-received");
-      if(coleteSpan) coleteSpan.textContent = formatNumber(coletesReceived);
-
-      if(coletesReceived > 0){
-        // ingredientes por colete
-        barsNeed["Ferro"] = (barsNeed["Ferro"] || 0) + coletesReceived * 15;
-        barsNeed["Aluminio"] = (barsNeed["Aluminio"] || 0) + coletesReceived * 15;
-        barsNeed["Tecido"] = (barsNeed["Tecido"] || 0) + coletesReceived * 20;
-
-        // pepitas equivalentes (minérios *10, tecido mantém)
-        pepitasNeed["Ferro"] += coletesReceived * 15 * 10;
-        pepitasNeed["Aluminio"] += coletesReceived * 15 * 10;
-        pepitasNeed["Tecido"] += coletesReceived * 20;
+        pepitasNeed["Ferro"] += coleteQty * 15 * 10;
+        pepitasNeed["Aluminio"] += coleteQty * 15 * 10;
+        pepitasNeed["Tecido"] += coleteQty * 20;
       }
 
-      // update pepitas
+      // Update pepitas
       document.querySelectorAll("[data-pepitas-need]").forEach(span=>{
         const mat = span.getAttribute("data-pepitas-need");
         span.textContent = formatNumber(pepitasNeed[mat] || 0);
       });
 
-      // update barras
+      // Update barras
       document.querySelectorAll("[data-bars-need]").forEach(span=>{
         const mat = span.getAttribute("data-bars-need");
         span.textContent = formatNumber(barsNeed[mat] || 0);
       });
 
-      // tens pepitas / barras
+      // Tens pepitas / barras
       const pepitasHave = {};
       const barsHave = {};
       materials.forEach(mat=>{
@@ -723,7 +658,7 @@
         barsHave[mat] = parseAmount(barInput ? barInput.value : "");
       });
 
-      // diff pepitas
+      // Diff pepitas
       document.querySelectorAll("[data-pepitas-diff]").forEach(span=>{
         const mat = span.getAttribute("data-pepitas-diff");
         const diff = (pepitasHave[mat] || 0) - (pepitasNeed[mat] || 0);
@@ -734,7 +669,7 @@
         if(diff > 0) span.classList.add("positive");
       });
 
-      // diff barras
+      // Diff barras
       document.querySelectorAll("[data-bars-diff]").forEach(span=>{
         const mat = span.getAttribute("data-bars-diff");
         const diff = (barsHave[mat] || 0) - (barsNeed[mat] || 0);
@@ -745,7 +680,7 @@
         if(diff > 0) span.classList.add("positive");
       });
 
-      // totais (só minérios)
+      // Totais (só minérios)
       let needOres = 0;
       let haveOres = 0;
       ORE_MATS.forEach(mat=>{
@@ -767,7 +702,7 @@
         if(diffOres > 0) diffSpan.classList.add("positive");
       }
 
-      // barras em falta + total €
+      // Barras em falta + total €
       const missingSpan = document.getElementById("bars-missing-ores");
       if(missingSpan) missingSpan.textContent = formatNumber(missingOres);
 
@@ -779,14 +714,12 @@
       if(eurSpan) eurSpan.textContent = formatNumber(totalEurMissing);
     }
 
-    // recalcular em todos inputs verdes
+    // Recalcular em todos inputs verdes
     document.querySelectorAll(".input.green").forEach(input=>{
       input.addEventListener("input", recalc);
     });
 
     recalc();
   </script>
-
-  <p>Made by Donald Trump</p>
 </body>
 </html>
