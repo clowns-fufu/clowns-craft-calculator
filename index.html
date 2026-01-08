@@ -190,7 +190,7 @@
       <!-- LADO ESQUERDO -->
       <section class="card">
         <h2><span>1.</span> Armas a craftar / vender</h2>
-        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres e, se quiseres, o preço por arma.</p>
+        <p>Escreve quantas <strong>Scar-SC, G36</strong> queres. O cálculo de peças assume: 1 craft = 3 armas.</p>
 
         <table class="table">
           <thead>
@@ -223,43 +223,6 @@
           </tfoot>
         </table>
 
-        <!-- NOVA ABA/SECÇÃO: crafts necessários -->
-        <p class="section-label">Crafts necessários (1 craft = 3 armas)</p>
-        <p class="small">Isto serve para dizer à malta: “faz X crafts para receber Y armas”.</p>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Arma</th>
-              <th>Queres</th>
-              <th>Crafts</th>
-              <th>Recebes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Scar-SC</td>
-              <td><span class="result-number" data-weapon-want="Scar-SC">0</span></td>
-              <td><span class="result-number" data-weapon-crafts="Scar-SC">0</span></td>
-              <td><span class="result-number" data-weapon-received="Scar-SC">0</span></td>
-            </tr>
-            <tr>
-              <td>G36</td>
-              <td><span class="result-number" data-weapon-want="G36">0</span></td>
-              <td><span class="result-number" data-weapon-crafts="G36">0</span></td>
-              <td><span class="result-number" data-weapon-received="G36">0</span></td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="2">Total crafts</td>
-              <td><span class="result-number" id="weapons-total-crafts">0</span></td>
-              <td><span class="result-number" id="weapons-total-received">0</span></td>
-            </tr>
-          </tfoot>
-        </table>
-
-        <br><br>
-
         <p class="section-label">Peças de arma necessárias (armas + peças extra)</p>
         <p class="small">Na coluna "Tens" podes escrever tipo 2+3 para somar.</p>
         <table class="table">
@@ -274,7 +237,28 @@
           <tbody id="parts-body"></tbody>
         </table>
 
-        <br><br>
+        <!-- NOVA ABA: crafts para cobrir a falta de peças -->
+        <p class="section-label">Crafts para cobrir a falta (1 craft = 3 peças)</p>
+        <p class="small">Com base no que falta, diz quantos crafts tens de fazer por peça (arredonda para cima).</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Peça</th>
+              <th>Falta</th>
+              <th>Crafts</th>
+              <th>Recebes</th>
+              <th>Sobra</th>
+            </tr>
+          </thead>
+          <tbody id="parts-craft-body"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2">Total crafts (todas as peças)</td>
+              <td><span class="result-number" id="parts-craft-total">0</span></td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
 
         <p class="section-label">Peças extra para craftar</p>
         <p class="small">Aqui metes o número de crafts por peça. Cada craft dá 3 peças.</p>
@@ -295,8 +279,6 @@
         <h2><span>2.</span> Materiais da mina</h2>
         <p>Só podes escrever nas caixas a <strong>verde</strong>.</p>
 
-        <br>
-
         <p class="section-label">Pepitas necessárias</p>
         <table class="table">
           <thead>
@@ -310,8 +292,6 @@
           <tbody id="pepitas-body"></tbody>
         </table>
 
-        <br><br>
-
         <p class="section-label">Refinado necessárias (barras)</p>
         <table class="table">
           <thead>
@@ -322,7 +302,6 @@
               <th>Falta / sobra</th>
             </tr>
           </thead>
-          <br>
           <tbody id="refined-body"></tbody>
           <tfoot>
             <tr>
@@ -413,7 +392,8 @@
       Corp:       { Carvao:10, Ferro:40,  Prata:0,  Cobre:0,  Ouro:0,  Aluminio:40, Borracha:0, Tecido:0 }
     };
 
-    // Estes valores são interpretados como "peças por craft" (porque 1 craft = 3 armas).
+    // IMPORTANTE:
+    // Estes valores agora são interpretados como "peças por craft" (porque 1 craft = 3 armas).
     const weaponParts = {
       "Scar-SC": { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
       "G36":     { Ferro:1, Gatilho:1, Mola:2, Engrenagem:2, Cano:1, Corp:1 },
@@ -421,6 +401,7 @@
 
     // DROPS
     const WEAPON_CRAFT_YIELD = 3;   // 1 craft = 3 armas
+    const PART_CRAFT_YIELD   = 3;   // 1 craft = 3 peças
     const COLETE_CRAFT_YIELD = 20;  // 1 craft = 20 coletes
 
     function craftsForWeapons(qty){
@@ -451,6 +432,7 @@
     }
 
     const partsBody = document.getElementById("parts-body");
+    const partsCraftBody = document.getElementById("parts-craft-body");
     const manualPartsBody = document.getElementById("manual-parts-body");
     const pepitasBody = document.getElementById("pepitas-body");
     const refinedBody = document.getElementById("refined-body");
@@ -483,7 +465,35 @@
         partsBody.appendChild(tr);
       });
 
-      // peças extra (inputs = crafts) + mostrar recebido (3 por craft)
+      // crafts para cobrir a falta (linhas)
+      parts.forEach(part=>{
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.textContent = part;
+
+        const tdMissing = document.createElement("td");
+        tdMissing.innerHTML = '<span class="result-number" data-part-missing="'+part+'">0</span>';
+
+        const tdCrafts = document.createElement("td");
+        tdCrafts.innerHTML = '<span class="result-number" data-part-crafts="'+part+'">0</span>';
+
+        const tdReceived = document.createElement("td");
+        tdReceived.innerHTML = '<span class="result-number" data-part-crafts-received="'+part+'">0</span>';
+
+        const tdLeftover = document.createElement("td");
+        tdLeftover.innerHTML = '<span class="result-number" data-part-crafts-leftover="'+part+'">0</span>';
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdMissing);
+        tr.appendChild(tdCrafts);
+        tr.appendChild(tdReceived);
+        tr.appendChild(tdLeftover);
+
+        partsCraftBody.appendChild(tr);
+      });
+
+      // peças extra (inputs = crafts) + mostrar recebido
       parts.forEach(part=>{
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
@@ -564,7 +574,7 @@
     buildStaticRows();
 
     function recalc(){
-      // armas
+      // armas (quantidade desejada)
       const weaponCounts = {};
       Object.keys(weaponParts).forEach(name=>{
         const input = document.getElementById("q-"+name);
@@ -588,38 +598,12 @@
       const weaponsTotalSpan = document.getElementById("weapons-total");
       if(weaponsTotalSpan) weaponsTotalSpan.textContent = formatNumber(weaponsTotal);
 
-      // NOVA ABA: crafts necessários para armas
-      let totalCraftsAll = 0;
-      let totalReceivedAll = 0;
-
-      Object.keys(weaponParts).forEach(name=>{
-        const want = weaponCounts[name] || 0;
-        const crafts = craftsForWeapons(want);
-        const received = crafts * WEAPON_CRAFT_YIELD;
-
-        totalCraftsAll += crafts;
-        totalReceivedAll += received;
-
-        const wantSpan = document.querySelector('[data-weapon-want="'+name+'"]');
-        const craftsSpan = document.querySelector('[data-weapon-crafts="'+name+'"]');
-        const receivedSpan = document.querySelector('[data-weapon-received="'+name+'"]');
-
-        if(wantSpan) wantSpan.textContent = formatNumber(want);
-        if(craftsSpan) craftsSpan.textContent = formatNumber(crafts);
-        if(receivedSpan) receivedSpan.textContent = formatNumber(received);
-      });
-
-      const totalCraftsSpan = document.getElementById("weapons-total-crafts");
-      const totalReceivedSpan = document.getElementById("weapons-total-received");
-      if(totalCraftsSpan) totalCraftsSpan.textContent = formatNumber(totalCraftsAll);
-      if(totalReceivedSpan) totalReceivedSpan.textContent = formatNumber(totalReceivedAll);
-
-      // peças extra (1 craft = 3 peças)
+      // peças extra (inputs = crafts, 1 craft = 3 peças)
       const extraParts = {};
       parts.forEach(p=>{
         const input = document.getElementById("extra-"+p);
         const crafts = input ? Math.max(0, parseInt(input.value || "0", 10)) : 0;
-        const received = crafts * 3;
+        const received = crafts * PART_CRAFT_YIELD;
         extraParts[p] = received;
 
         const receivedSpan = document.querySelector('[data-extra-received="'+p+'"]');
@@ -646,7 +630,7 @@
         span.textContent = totalParts[partName] || 0;
       });
 
-      // diff peças
+      // diff peças (have - need)
       document.querySelectorAll("[data-part-diff]").forEach(span=>{
         const partName = span.getAttribute("data-part-diff");
         const totalNeed = totalParts[partName] || 0;
@@ -660,10 +644,7 @@
         if(diff > 0) span.classList.add("positive");
       });
 
-      // pepitas (a partir das peças EM FALTA)
-      const pepitasNeed = {};
-      materials.forEach(m => pepitasNeed[m] = 0);
-
+      // calcular peças em falta (need - have)
       const missingParts = {};
       parts.forEach(partName=>{
         const totalNeed = totalParts[partName] || 0;
@@ -671,6 +652,34 @@
         const have = parseAmount(haveInput ? haveInput.value : "");
         missingParts[partName] = Math.max(0, totalNeed - have);
       });
+
+      // NOVA ABA: crafts recomendados para cobrir a falta
+      let totalPartCrafts = 0;
+      parts.forEach(partName=>{
+        const missing = missingParts[partName] || 0;
+        const crafts = missing > 0 ? Math.ceil(missing / PART_CRAFT_YIELD) : 0;
+        const received = crafts * PART_CRAFT_YIELD;
+        const leftover = received - missing;
+
+        totalPartCrafts += crafts;
+
+        const sMissing = document.querySelector('[data-part-missing="'+partName+'"]');
+        const sCrafts = document.querySelector('[data-part-crafts="'+partName+'"]');
+        const sReceived = document.querySelector('[data-part-crafts-received="'+partName+'"]');
+        const sLeftover = document.querySelector('[data-part-crafts-leftover="'+partName+'"]');
+
+        if(sMissing) sMissing.textContent = formatNumber(missing);
+        if(sCrafts) sCrafts.textContent = formatNumber(crafts);
+        if(sReceived) sReceived.textContent = formatNumber(received);
+        if(sLeftover) sLeftover.textContent = formatNumber(leftover);
+      });
+
+      const totalCraftSpan = document.getElementById("parts-craft-total");
+      if(totalCraftSpan) totalCraftSpan.textContent = formatNumber(totalPartCrafts);
+
+      // pepitas (a partir das peças EM FALTA)
+      const pepitasNeed = {};
+      materials.forEach(m => pepitasNeed[m] = 0);
 
       Object.entries(missingParts).forEach(([partName, missingQty])=>{
         const map = materialPerPart[partName];
